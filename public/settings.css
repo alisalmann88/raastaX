@@ -1,0 +1,78 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+:root {
+  --blue: #0b3c5d;
+  --light: #eef5ff;
+  --white: #ffffff;
+  --gray: #666;
+  --accent: #ff7a59;
+}
+
+header {
+  background: var(--white);
+  border-bottom: 2px solid #eee;
+  padding: 18px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--blue);
+}
+
+header nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: var(--blue);
+  font-weight: 600;
+}
+
+header nav a.active {
+  color: var(--accent);
+}
+
+main {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+h1 {
+  color: var(--blue);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+form label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+  color: var(--blue);
+}
+
+form input, form select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+form button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: var(--white);
+  font-weight: 700;
+  cursor: pointer;
+}

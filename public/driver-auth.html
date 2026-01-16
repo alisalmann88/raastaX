@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Driver Login / Signup | raastaX</title>
+  <link rel="stylesheet" href="driver-auth.css">
+  <style>
+    body { margin:0; font-family:sans-serif; background:#f0f0f0; }
+    .auth-wrapper { display:flex; justify-content:center; align-items:center; height:100vh; }
+    .auth-box { background:#fff; padding:30px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.15); width:350px; text-align:center; }
+    h2 { margin-bottom:20px; }
+    input { width:100%; padding:10px; margin:10px 0; border-radius:6px; border:1px solid #ccc; }
+    .auth-btn { width:100%; padding:12px; margin:10px 0; border:none; border-radius:6px; cursor:pointer; font-weight:bold; }
+    .primary { background:#007bff; color:#fff; }
+    .secondary { background:#28a745; color:#fff; }
+    .toggle { color:#007bff; cursor:pointer; text-decoration:underline; margin-top:10px; display:block; }
+    p { font-size:0.9rem; color:#555; }
+  </style>
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-box" id="auth-box">
+    <h2 id="auth-title">Driver Login</h2>
+
+    <!-- Login Fields -->
+    <div id="login-fields">
+      <label>Mobile Number</label>
+      <input type="text" id="phone" placeholder="03XX XXXXXXX">
+
+      <button class="auth-btn primary" id="login-btn">Login</button>
+      <p class="toggle" id="show-signup">New Driver? Sign Up</p>
+      <p>By continuing you agree to <strong>raastaX Terms</strong></p>
+    </div>
+
+    <!-- Signup Fields -->
+    <div id="signup-fields" style="display:none;">
+      <label>Full Name</label>
+      <input type="text" id="name" placeholder="Your Name">
+
+      <label>Mobile Number</label>
+      <input type="text" id="signup-phone" placeholder="03XX XXXXXXX">
+
+      <label>CNIC Number</label>
+      <input type="text" id="cnic" placeholder="XXXXX-XXXXXXX-X">
+
+      <label>Car Model</label>
+      <input type="text" id="car-model" placeholder="Toyota Corolla">
+
+      <label>Seats Available</label>
+      <input type="number" id="seats" placeholder="4">
+
+      <button class="auth-btn secondary" id="signup-btn">Sign Up</button>
+      <p class="toggle" id="show-login">Already have an account? Login</p>
+      <p>By continuing you agree to <strong>raastaX Terms</strong></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const loginFields = document.getElementById("login-fields");
+const signupFields = document.getElementById("signup-fields");
+const showSignup = document.getElementById("show-signup");
+const showLogin = document.getElementById("show-login");
+
+// Toggle login/signup
+showSignup.addEventListener("click", ()=>{
+  loginFields.style.display="none";
+  signupFields.style.display="block";
+  document.getElementById("auth-title").textContent="Driver Sign Up";
+});
+showLogin.addEventListener("click", ()=>{
+  signupFields.style.display="none";
+  loginFields.style.display="block";
+  document.getElementById("auth-title").textContent="Driver Login";
+});
+
+// LOGIN
+document.getElementById("login-btn").addEventListener("click", ()=>{
+  const phone = document.getElementById("phone").value.trim();
+  if(!phone) return alert("Enter mobile number");
+
+  let users = JSON.parse(localStorage.getItem("drivers")) || [];
+  let user = users.find(u=>u.phone===phone);
+  if(!user) return alert("No account found. Please sign up first.");
+
+  localStorage.setItem("user", JSON.stringify(user));
+  window.location.href="driver.html";
+});
+
+// SIGNUP
+document.getElementById("signup-btn").addEventListener("click", ()=>{
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("signup-phone").value.trim();
+  const cnic = document.getElementById("cnic").value.trim();
+  const car = document.getElementById("car-model").value.trim();
+  const seats = document.getElementById("seats").value.trim();
+  if(!name || !phone || !cnic || !car || !seats) return alert("Enter all fields");
+
+  let users = JSON.parse(localStorage.getItem("drivers")) || [];
+  if(users.find(u=>u.phone===phone)) return alert("User already exists");
+
+  const newUser = { role:"driver", name, phone, cnic, car, seats };
+  users.push(newUser);
+  localStorage.setItem("drivers", JSON.stringify(users));
+  localStorage.setItem("user", JSON.stringify(newUser));
+
+  window.location.href="driver.html";
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  color: #0a1f44;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ccc;
+}
+
+.navbar .logo a {
+  color: #0a1f44;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav-links a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #0a1f44;
+  font-weight: 500;
+}
+
+.ticket-main {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.ticket {
+  background: #f5f8ff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.ticket h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.ticket p, .ticket li {
+  margin: 8px 0;
+}

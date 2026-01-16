@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RaastaX | Booking</title>
+  <link rel="stylesheet" href="booking.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<header class="navbar">
+  <div class="logo"><a href="index.html">RaastaX</a></div>
+  <div class="nav-links">
+    <a href="#"><i class="fa-solid fa-magnifying-glass"></i> Search Drivers</a>
+    <a href="#"><i class="fa-solid fa-headset"></i> Support</a>
+    <a href="#"><i class="fa-solid fa-user"></i> Sign In</a>
+  </div>
+</header>
+
+<main class="booking-main">
+  <div class="steps">
+    <div class="step active"><i class="fa-solid fa-car"></i><span>Booking</span></div>
+    <div class="step"><i class="fa-solid fa-chair"></i><span>Seat Allocation</span></div>
+    <div class="step"><i class="fa-solid fa-credit-card"></i><span>Payment</span></div>
+    <div class="step"><i class="fa-solid fa-ticket"></i><span>E-Ticket</span></div>
+  </div>
+
+  <div class="booking-content">
+    <div class="passenger-form">
+      <h2>Passenger Details</h2>
+
+      <label for="num-passengers">Number of Passengers</label>
+      <select id="num-passengers">
+        <option value="1">1 Passenger</option>
+        <option value="2">2 Passengers</option>
+        <option value="3">3 Passengers</option>
+        <option value="4">Book Whole Car</option>
+      </select>
+
+      <div id="passenger-list"></div>
+
+      <label for="payment">Payment Method</label>
+      <select id="payment">
+        <option value="JazzCash">JazzCash</option>
+        <option value="Easypaisa">Easypaisa</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+      </select>
+
+      <button id="continue-btn">Continue</button>
+    </div>
+
+    <div class="trip-summary"></div>
+  </div>
+</main>
+
+<script src="booking.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RaastaX | E-Ticket</title>
+  <link rel="stylesheet" href="e-ticket.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<header class="navbar">
+  <div class="logo"><a href="index.html">RaastaX</a></div>
+  <div class="nav-links">
+    <a href="#"><i class="fa-solid fa-headset"></i> Support</a>
+    <a href="#"><i class="fa-solid fa-user"></i> Sign In</a>
+  </div>
+</header>
+
+<main class="ticket-main">
+  <h2>E-Ticket</h2>
+  <div class="ticket">
+    <p><strong>Order ID:</strong> <span id="order-id"></span></p>
+    <p><strong>Passenger:</strong> <span id="passenger-name"></span></p>
+    <p><strong>Seats:</strong> <span id="seat"></span></p>
+    <p><strong>Route:</strong> <span id="route"></span></p>
+    <p><strong>Date:</strong> <span id="date"></span></p>
+    <p><strong>Departure:</strong> <span id="time"></span></p>
+    <p><strong>Total Paid:</strong> <span id="fare"></span></p>
+    <p><strong>Payment Method:</strong> <span id="method"></span></p>
+    <ul>
+      <li>✔ E-Ticket via WhatsApp & Email</li>
+      <li>✔ Driver contact after confirmation</li>
+    </ul>
+  </div>
+</main>
+
+<script>
+  const booking = JSON.parse(localStorage.getItem('paidBooking'));
+
+  if (!booking || !booking.paid) {
+    alert("No completed booking found.");
+    window.location.href = "search.html";
+  }
+
+  document.getElementById('order-id').textContent = booking.orderId || "N/A";
+  document.getElementById('passenger-name').textContent = booking.fullname || "N/A";
+  document.getElementById('seat').textContent = booking.seats?.join(", ") || "N/A";
+  document.getElementById('fare').textContent = "PKR " + (booking.totalFare || 0).toLocaleString();
+  document.getElementById('method').textContent = booking.paymentMethod || "N/A";
+
+  // Route, Date, and Departure can come from trip object
+  const trip = booking.trip || {};
+  document.getElementById('route').textContent = `${trip.pickup || "N/A"} → ${trip.destination || "N/A"}`;
+  document.getElementById('date').textContent = trip.date || "N/A";
+  document.getElementById('time').textContent = trip.time || "N/A";
+</script>
+</body>
+</html>

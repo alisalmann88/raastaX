@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RaastaX | Seat Allocation</title>
+  <link rel="stylesheet" href="seat-allocation.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo"><a href="index.html">RaastaX</a></div>
+  <div class="nav-links">
+    <a href="#"><i class="fa-solid fa-headset"></i> Support</a>
+    <a href="#"><i class="fa-solid fa-user"></i> Sign In</a>
+  </div>
+</header>
+
+<main class="seat-main">
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step completed"><i class="fa-solid fa-car"></i><span>Booking</span></div>
+    <div class="step active"><i class="fa-solid fa-chair"></i><span>Seat Allocation</span></div>
+    <div class="step"><i class="fa-solid fa-credit-card"></i><span>Payment</span></div>
+    <div class="step"><i class="fa-solid fa-ticket"></i><span>E-Ticket</span></div>
+  </div>
+
+  <div class="seat-container">
+    <h2>Select Your Seats</h2>
+    <p>Front seat has 20% extra charges</p>
+    <p>Available Seats: <span id="available-seats"></span></p>
+
+    <div class="car-layout">
+      <div class="row front-row">
+        <div class="seat front-seat" data-seat="F1">F1</div>
+        <div class="seat driver-seat">Driver</div>
+      </div>
+      <div class="row back-row">
+        <div class="seat back-seat" data-seat="B1">B1</div>
+        <div class="seat back-seat" data-seat="B2">B2</div>
+        <div class="seat back-seat" data-seat="B3">B3</div>
+      </div>
+    </div>
+
+    <div class="selected-info">
+      Selected Seats: <span id="selected-seat">None</span><br>
+      Total Fare: <span id="total-fare">PKR 0</span>
+    </div>
+
+    <button id="continue-btn">Continue to Payment</button>
+  </div>
+
+<script src="seat-allocation.js"></script>
+</body>
+</html>

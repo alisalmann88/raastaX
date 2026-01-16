@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RaastaX | Payment</title>
+  <link rel="stylesheet" href="payment.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<header class="navbar">
+  <div class="logo"><a href="index.html">RaastaX</a></div>
+  <div class="nav-links">
+    <a href="#"><i class="fa-solid fa-headset"></i> Support</a>
+    <a href="#"><i class="fa-solid fa-user"></i> Sign In</a>
+  </div>
+</header>
+
+<main class="payment-main">
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step completed"><i class="fa-solid fa-car"></i><span>Booking</span></div>
+    <div class="step completed"><i class="fa-solid fa-chair"></i><span>Seat Allocation</span></div>
+    <div class="step active"><i class="fa-solid fa-credit-card"></i><span>Payment</span></div>
+    <div class="step"><i class="fa-solid fa-ticket"></i><span>E-Ticket</span></div>
+  </div>
+
+ <div class="payment-content">
+  <h2>Payment</h2>
+
+  <div class="summary">
+    <h3>Booking Summary</h3>
+    <p><strong>Passenger:</strong> <span id="passenger-name"></span></p>
+    <p><strong>Seats:</strong> <span id="seat"></span></p>
+    <p><strong>Total Fare:</strong> <span id="fare"></span></p>
+    <p><strong>Order ID:</strong> <span id="order-id">Pending</span></p> <!-- NEW -->
+  </div>
+
+  <h3>Choose Payment Method</h3>
+  <select id="payment-method">
+    <option value="JazzCash">JazzCash</option>
+    <option value="Easypaisa">Easypaisa</option>
+    <option value="Bank Transfer">Bank Transfer</option>
+  </select>
+
+  <button id="pay-btn">Confirm & Pay</button>
+</div>
+
+</main>
+
+<script src="payment.js"></script>
+</body>
+</html>

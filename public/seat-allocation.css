@@ -1,0 +1,185 @@
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  color: #0a1f44;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ccc;
+}
+
+.navbar .logo a {
+  color: #0a1f44;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav-links a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #0a1f44;
+  font-weight: 500;
+}
+
+/* ===== STEPS ===== */
+.seat-main {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.step {
+  text-align: center;
+  flex: 1;
+  position: relative;
+  color: #888;
+}
+
+.step.active {
+  color: #0a1f44;
+  font-weight: bold;
+}
+
+.step.completed {
+  color: #0a1f44;
+}
+
+.step i {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* ===== SEAT LAYOUT ===== */
+.seat-container h2 {
+  margin-bottom: 10px;
+}
+
+.car-layout {
+  margin: 20px 0;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.seat {
+  width: 60px;
+  height: 60px;
+  background: #d0e0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.seat.driver-seat {
+  background: #0a1f44;
+  color: #fff;
+  cursor: default;
+}
+
+.seat.front-seat {
+  background: #0a1f44;
+  color: #fff;
+}
+
+.seat.back-seat {
+  background: #6b8ed6;
+  color: #fff;
+}
+
+.seat.occupied {
+  background: #ccc;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.seat.selected {
+  border: 3px solid #ffae00;
+  background: #ff7a59;
+  color: #fff;
+}
+
+.seat.new-booked {
+  background: #5a9cff;
+  color: #fff;
+}
+
+/* Gender label on seat */
+.seat[data-gender="M"]::after,
+.seat[data-gender="F"]::after {
+  content: attr(data-gender);
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* ===== INFO ===== */
+.selected-info {
+  margin: 15px 0;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.selected-info span {
+  font-weight: bold;
+  color: #ff7a59;
+}
+
+#available-seats {
+  font-weight: 600;
+  color: #0a1f44;
+  margin-left: 5px;
+}
+
+/* ===== CONTINUE BUTTON ===== */
+#continue-btn {
+  padding: 12px 20px;
+  background: #0a1f44;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#continue-btn:hover {
+  background: #15294f;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .seat {
+    width: 45px;
+    height: 45px;
+  }
+  .row {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+}

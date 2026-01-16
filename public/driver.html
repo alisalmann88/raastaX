@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>raastaX | Driver Dashboard</title>
+
+
+  <link rel="stylesheet" href="driver.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header>
+  <div class="logo">raastaX</div>
+  <div class="driver-info">
+    <i class="fa-solid fa-user"></i> Driver Panel
+  </div>
+</header>
+
+<div class="dashboard">
+
+
+
+
+
+
+
+
+<aside class="sidebar">
+  <a class="active" href="driver.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+  <a href="my-trips.html"><i class="fa-solid fa-car"></i> My Trips</a>
+  <a href="add-trip.html"><i class="fa-solid fa-plus"></i> Add Trip</a>
+  <a href="bookings.html"><i class="fa-solid fa-users"></i> Bookings</a>
+  <a href="earnings.html"><i class="fa-solid fa-wallet"></i> Earnings</a>
+  <a href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+  <a class="logout" href="#"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</aside>
+
+
+
+
+
+
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- STATS -->
+    <section class="stats">
+      <div class="stat-card">
+        <h3>Upcoming Trips</h3>
+        <p>04</p>
+      </div>
+      <div class="stat-card">
+        <h3>Total Bookings</h3>
+        <p>18</p>
+      </div>
+      <div class="stat-card">
+        <h3>Earnings</h3>
+        <p>PKR 84,000</p>
+      </div>
+      <div class="stat-card">
+        <h3>Rating</h3>
+        <p>⭐ 4.8</p>
+      </div>
+    </section>
+
+    <!-- UPCOMING TRIPS -->
+    <section class="card">
+      <h2>Upcoming Trips</h2>
+
+      <div class="trip">
+        <div>
+          <strong>Gilgit → Islamabad</strong>
+          <p>5 Jan 2026 • 6:00 AM</p>
+        </div>
+        <span>Seats Left: 2</span>
+      </div>
+
+      <div class="trip">
+        <div>
+          <strong>Skardu → Islamabad</strong>
+          <p>8 Jan 2026 • 7:30 AM</p>
+        </div>
+        <span>Seats Left: 4</span>
+      </div>
+    </section>
+
+    <!-- BOOKINGS -->
+    <section class="card">
+      <h2>Recent Bookings</h2>
+
+      <div class="booking">
+        <span>Ali • Back Seat</span>
+        <span>PKR 14,000</span>
+      </div>
+
+      <div class="booking">
+        <span>Usman • Front Seat</span>
+        <span>PKR 14,500</span>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<footer>
+  © 2026 raastaX — Driver Dashboard
+</footer>
+<script>
+  // Highlight active sidebar link
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+  sidebarLinks.forEach(link => {
+    // Get href filename only
+    const linkPage = link.getAttribute('href');
+    const currentPage = window.location.pathname.split('/').pop(); // current page filename
+
+    if(linkPage === currentPage){
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+</script>
+
+</body>
+</html>

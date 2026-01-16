@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Passenger Login | raastaX</title>
+  <link rel="stylesheet" href="passenger-auth.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+    }
+    .auth-wrapper {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-box {
+      background: #fff;
+      padding: 30px;
+      width: 350px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    h2 { text-align: center; }
+    label { display: block; margin-top: 10px; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .toggle {
+      text-align: center;
+      margin-top: 10px;
+      color: #007bff;
+      cursor: pointer;
+    }
+    p {
+      font-size: 0.85rem;
+      text-align: center;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-box">
+    <h2 id="title">Continue to your account</h2>
+
+    <!-- LOGIN -->
+    <div id="login-box">
+      <label>Mobile Number</label>
+      <input type="text" id="login-phone" placeholder="03XX XXXXXXX">
+      <button onclick="login()">Continue</button>
+      <div class="toggle" onclick="showSignup()">New user? Sign up</div>
+    </div>
+
+    <!-- SIGNUP -->
+    <div id="signup-box" style="display:none">
+      <label>Full Name</label>
+      <input type="text" id="name">
+
+      <label>Mobile Number</label>
+      <input type="text" id="signup-phone">
+
+      <button onclick="signup()">Sign Up</button>
+      <div class="toggle" onclick="showLogin()">Already have an account?</div>
+    </div>
+
+    <p>By continuing you agree to raastaX Terms & Conditions</p>
+  </div>
+</div>
+
+<script>
+function showSignup() {
+  document.getElementById("login-box").style.display = "none";
+  document.getElementById("signup-box").style.display = "block";
+  document.getElementById("title").innerText = "Passenger Sign Up";
+}
+
+function showLogin() {
+  document.getElementById("signup-box").style.display = "none";
+  document.getElementById("login-box").style.display = "block";
+  document.getElementById("title").innerText = "Continue to your account";
+}
+
+function login() {
+  const phone = document.getElementById("login-phone").value.trim();
+  if (!phone) return alert("Enter phone number");
+
+  const users = JSON.parse(localStorage.getItem("passengers")) || [];
+  const user = users.find(u => u.phone === phone);
+
+  if (!user) return alert("Account not found. Please sign up.");
+
+  localStorage.setItem("user", JSON.stringify(user));
+  window.location.href = "passenger-dashboard.html";
+}
+
+function signup() {
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("signup-phone").value.trim();
+  if (!name || !phone) return alert("Fill all fields");
+
+  let users = JSON.parse(localStorage.getItem("passengers")) || [];
+  if (users.find(u => u.phone === phone))
+    return alert("Account already exists");
+
+  const newUser = { role: "passenger", name, phone };
+  users.push(newUser);
+
+  localStorage.setItem("passengers", JSON.stringify(users));
+  localStorage.setItem("user", JSON.stringify(newUser));
+
+  window.location.href = "passenger-dashboard.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>raastaX | Search Rides</title>
+  <link rel="stylesheet" href="search.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="navbar">
+  <div class="logo"><a href="index.html">RaastaX</a></div>
+  <div class="nav-links">
+    <a href="#"><i class="fa-solid fa-headset"></i> Support</a>
+    <a href="#" class="auth-link"><i class="fa-solid fa-user"></i> Sign In / Sign Up</a>
+    <label for="driver-auth-toggle"><i class="fa-solid fa-car"></i> Driver</label>
+  </div>
+</header>
+
+<!-- DATE SELECTOR -->
+<section class="date-selector">
+  <button class="arrow left" onclick="prevWeek()"><i class="fa-solid fa-chevron-left"></i></button>
+  <div class="dates" id="date-carousel"></div>
+  <button class="arrow right" onclick="nextWeek()"><i class="fa-solid fa-chevron-right"></i></button>
+</section>
+
+<!-- TRIP CARDS -->
+<section class="trips" id="trip-list"></section>
+
+<!-- FILTERS -->
+<section class="filters">
+  <button class="filter-btn active" data-filter="suggested">Suggested</button>
+  <button class="filter-btn" data-filter="cheapest">Cheapest</button>
+</section>
+
+<!-- SUPPORT -->
+<section class="support">
+  <h2>24/7 Customer Support</h2>
+  <p>📞 (021) 111-172-782</p>
+  <p>📱 +92 304 7772782</p>
+  <p>✉️ support@raastax.pk</p>
+  <p>Use promo code WELCOME & get PKR 500 off</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 raastaX. All rights reserved.
+</footer>
+
+<!-- PASSENGER AUTH POPUP -->
+<div class="auth-wrapper hidden" id="passengerAuth">
+  <div class="auth-box">
+    <h2 id="auth-title">Continue to your account</h2>
+
+    <!-- PHONE LOGIN -->
+    <div id="login-box">
+      <label>Mobile Number</label>
+      <input type="text" id="login-phone" placeholder="03XX XXXXXXX">
+      <button class="primary" onclick="login()">Continue</button>
+      <div class="toggle" onclick="showSignup()">New user? Sign up</div>
+    </div>
+
+    <!-- SIGN UP -->
+    <div id="signup-box" style="display:none">
+      <label>Full Name</label>
+      <input type="text" id="signup-name">
+      <label>Mobile Number</label>
+      <input type="text" id="signup-phone">
+      <button class="primary" onclick="signup()">Sign Up</button>
+      <div class="toggle" onclick="showLogin()">Already have an account?</div>
+    </div>
+
+    <p>By continuing you agree to <strong>raastaX Terms & Conditions</strong></p>
+  </div>
+</div>
+
+<script src="search.js"></script>
+<script>
+const passengerAuth = document.getElementById("passengerAuth");
+const authBtnLabel = document.querySelector(".auth-link");
+
+authBtnLabel.onclick = () => {
+  passengerAuth.classList.remove("hidden");
+  showLogin();
+};
+
+function showSignup() {
+  document.getElementById("login-box").style.display = "none";
+  document.getElementById("signup-box").style.display = "block";
+  document.getElementById("auth-title").innerText = "Passenger Sign Up";
+}
+
+function showLogin() {
+  document.getElementById("signup-box").style.display = "none";
+  document.getElementById("login-box").style.display = "block";
+  document.getElementById("auth-title").innerText = "Continue to your account";
+}
+
+function login() {
+  const phone = document.getElementById("login-phone").value.trim();
+  if (!phone) return alert("Enter mobile number");
+
+  let users = JSON.parse(localStorage.getItem("passengers")) || [];
+  let user = users.find(u => u.phone === phone);
+
+  if (!user) return alert("Account not found. Please sign up.");
+
+  localStorage.setItem("user", JSON.stringify(user));
+  passengerAuth.classList.add("hidden");
+  renderUserDropdown();
+}
+
+function signup() {
+  const name = document.getElementById("signup-name").value.trim();
+  const phone = document.getElementById("signup-phone").value.trim();
+  if (!name || !phone) return alert("Fill all fields");
+
+  let users = JSON.parse(localStorage.getItem("passengers")) || [];
+  if (users.find(u => u.phone === phone)) return alert("Account already exists");
+
+  const newUser = { role: "passenger", name, phone };
+  users.push(newUser);
+  localStorage.setItem("passengers", JSON.stringify(users));
+  localStorage.setItem("user", JSON.stringify(newUser));
+
+  passengerAuth.classList.add("hidden");
+  renderUserDropdown();
+}
+
+function renderUserDropdown() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) return;
+
+  authBtnLabel.innerHTML = `
+    <div class="user-menu">
+      <span>${user.name} ▾</span>
+      <div class="dropdown">
+        <a href="edit-profile.html">Edit Profile</a>
+        <a href="my-trips.html">My Trips</a>
+        <a href="wallet.html">raastaX Wallet</a>
+        <a href="rewards.html">Rewards</a>
+        <a href="#" onclick="logout()">Log Out</a>
+      </div>
+    </div>
+  `;
+
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .user-menu { position: relative; cursor: pointer; font-weight: bold; }
+    .user-menu .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      min-width: 150px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+    .user-menu:hover .dropdown { display: block; }
+    .user-menu .dropdown a {
+      display: block;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+    }
+    .user-menu .dropdown a:hover { background: #f2f2f2; }
+  `;
+  document.head.appendChild(style);
+}
+
+function logout() {
+  localStorage.removeItem("user");
+  location.reload();
+}
+
+if (JSON.parse(localStorage.getItem("user"))) renderUserDropdown();
+</script>
+
+</body>
+</html>

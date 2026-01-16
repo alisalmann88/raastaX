@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>raastaX | Travel Bookings Made Easy</title>
+
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    .logo a{
+      font-size:26px;
+      font-weight:700;
+      color:#0b3c6d;
+      text-decoration:none;
+    }
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.5);
+      z-index:1000;
+    }
+
+    .modal-content{
+      background:#fff;
+      width:320px;
+      margin:10% auto;
+      padding:20px;
+      border-radius:12px;
+      text-align:center;
+      position:relative;
+    }
+
+    .modal-content h3{ color:#0b3c6d; }
+
+    .modal-content input{
+      width:90%;
+      padding:10px;
+      margin:8px 0;
+    }
+
+    .modal-content button{
+      width:95%;
+      padding:10px;
+      margin-top:10px;
+      cursor:pointer;
+    }
+
+    .close{
+      position:absolute;
+      top:8px;
+      right:12px;
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    .link{
+      color:#0b3c6d;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    #user-container{ position:relative; display:inline-block; }
+
+    #user-dropdown{
+      display:none;
+      position:absolute;
+      right:0;
+      top:40px;
+      width:200px;
+      background:#fff;
+      border-radius:10px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.15);
+      z-index:999;
+    }
+
+    #user-dropdown button{
+      width:100%;
+      padding:10px;
+      border:none;
+      background:none;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    #user-dropdown button:hover{ background:#f2f2f2; }
+  </style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="logo"><a href="index.html">raastaX</a></div>
+
+  <div class="nav-links">
+    <a href="#"><i class="fa-solid fa-headset"></i> Support</a>
+    <a href="driver.html" id="driver-btn">Driver</a>
+
+    <div id="user-container">
+      <a href="#" id="auth-btn">Sign In / Sign Up</a>
+
+      <div id="user-dropdown">
+        <button id="profile-btn">Profile</button>
+        <button id="trips-btn">My Trips</button>
+        <button id="wallet-btn">raastaX Wallet</button>
+        <button id="settings-btn">Settings</button>
+        <button id="logout">Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- LOGIN MODAL -->
+<div id="login-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close-login">&times;</span>
+    <h3>Passenger Login</h3>
+    <input type="text" id="login-email" placeholder="Your Name or Email">
+    <input type="password" id="login-password" placeholder="Password">
+    <button id="login-btn">Login</button>
+    <p>Don’t have an account?
+      <span class="link" id="open-signup">Sign Up</span>
+    </p>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div id="signup-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close-signup">&times;</span>
+    <h3>Create Account</h3>
+    <input type="text" id="signup-name" placeholder="Full Name">
+    <input type="text" id="signup-email" placeholder="Email or Phone">
+    <input type="password" id="signup-password" placeholder="Password">
+    <input type="text" id="signup-otp" placeholder="Enter OTP">
+    <button id="send-otp">Send OTP</button>
+    <button id="signup-btn">Create Account</button>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-content">
+    <p class="launch">🚀 Launching on <strong>26 January 2026</strong></p>
+    <h1>Travel Bookings Made Easy</h1>
+    <p class="subtitle">
+      Book trusted car rides from Gilgit-Baltistan to Islamabad, Rawalpindi & beyond
+    </p>
+  </div>
+
+  <div class="search-island">
+    <div class="field">
+      <i class="fa-solid fa-location-dot"></i>
+      <select id="pickup">
+        <option value="" disabled selected>Pickup Location</option>
+        <option>Islamabad</option>
+        <option>Rawalpindi</option>
+        <option>Gilgit</option>
+        <option>Skardu</option>
+        <option>Hunza</option>
+        <option>Ghakuch</option>
+        <option>Astore</option>
+        <option>Chilas</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <i class="fa-solid fa-flag-checkered"></i>
+      <select id="destination">
+        <option value="" disabled selected>Destination</option>
+        <option>Islamabad</option>
+        <option>Rawalpindi</option>
+        <option>Gilgit</option>
+        <option>Skardu</option>
+        <option>Hunza</option>
+        <option>Ghakuch</option>
+        <option>Astore</option>
+        <option>Chilas</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <i class="fa-solid fa-calendar"></i>
+      <input type="date" id="date">
+    </div>
+
+    <div class="field">
+      <i class="fa-solid fa-users"></i>
+      <select id="passengers">
+        <option value="" disabled selected>Passengers</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </div>
+
+    <button class="search-btn" id="search-btn">
+      <i class="fa-solid fa-magnifying-glass"></i> Search
+    </button>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div>✔ Verified Drivers</div>
+  <div>✔ Secure Payments</div>
+  <div>✔ E-Ticket via WhatsApp</div>
+</section>
+
+<section class="support">
+  <h2>24/7 Customer Support</h2>
+  <p>📞 +92 21-111-172-782</p>
+  <p>📱 +92 304 7772782</p>
+</section>
+
+<footer>© 2026 raastaX. Built for trusted northern travel.</footer>
+
+<script>
+  const authBtn = document.getElementById("auth-btn");
+  const driverBtn = document.getElementById("driver-btn");
+  const loginModal = document.getElementById("login-modal");
+  const signupModal = document.getElementById("signup-modal");
+  const dropdown = document.getElementById("user-dropdown");
+
+  // Check saved user
+  const savedUser = localStorage.getItem("passengerName");
+  if(savedUser){
+    authBtn.textContent = savedUser; // no icon
+    driverBtn.style.display = "none"; // hide driver button
+  }
+
+  authBtn.onclick = () => {
+    if(!savedUser) loginModal.style.display = "block";
+    else dropdown.style.display = dropdown.style.display==="block" ? "none" : "block";
+  };
+
+  document.getElementById("close-login").onclick = () => loginModal.style.display = "none";
+  document.getElementById("close-signup").onclick = () => signupModal.style.display = "none";
+
+  document.getElementById("open-signup").onclick = () => {
+    loginModal.style.display="none";
+    signupModal.style.display="block";
+  };
+
+  document.getElementById("login-btn").onclick = () => {
+    const nameInput = document.getElementById("login-email").value.trim();
+    if(!nameInput) return alert("Enter name or email");
+    localStorage.setItem("passengerName", nameInput);
+    location.reload();
+  };
+
+  document.getElementById("signup-btn").onclick = () => {
+    const nameInput = document.getElementById("signup-name").value.trim();
+    if(!nameInput) return alert("Fill all fields");
+    localStorage.setItem("passengerName", nameInput);
+    location.reload();
+  };
+
+  document.getElementById("send-otp").onclick = () => alert("OTP Sent!");
+
+  document.getElementById("logout").onclick = () => {
+    localStorage.removeItem("passengerName");
+    location.reload();
+  };
+
+  document.getElementById("search-btn").onclick = () => {
+    const pickup = document.getElementById("pickup").value;
+    const destination = document.getElementById("destination").value;
+    const date = document.getElementById("date").value;
+    const passengers = document.getElementById("passengers").value;
+
+    if(!pickup || !destination || !date || !passengers){
+      alert("Please fill all fields");
+      return;
+    }
+
+    localStorage.setItem("searchData", JSON.stringify({pickup,destination,date,passengers}));
+    window.location.href = "search.html";
+  };
+</script>
+
+</body>
+</html>

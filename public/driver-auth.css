@@ -1,0 +1,91 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(135deg, #f7f8fa, #eef1f5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Wrapper */
+.auth-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Box */
+.auth-box {
+  width: 360px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+}
+
+.auth-box h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+/* Input */
+.auth-box label {
+  font-size: 13px;
+  margin-bottom: 6px;
+  display: block;
+  color: #444;
+}
+
+.auth-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 18px;
+  outline: none;
+}
+
+.auth-box input:focus {
+  border-color: #000;
+}
+
+/* Buttons */
+.auth-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.whatsapp {
+  background: #000;
+  color: #fff;
+}
+
+.sms {
+  background: #f2f2f2;
+  color: #000;
+}
+
+/* Terms */
+.terms {
+  font-size: 12px;
+  color: #666;
+  margin-top: 14px;
+}
+
+.terms a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+}

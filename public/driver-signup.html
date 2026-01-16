@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Driver Sign Up | raastaX</title>
+  <link rel="stylesheet" href="driver-auth.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-box floating">
+    <h2>Sign Up as Driver</h2>
+
+    <label>Name</label>
+    <input type="text" id="name" placeholder="Your Name">
+
+    <label>Mobile Number</label>
+    <input type="text" id="phone" placeholder="03XX XXXXXXX">
+
+    <button class="auth-btn signup">Sign Up</button>
+  </div>
+</div>
+
+<script>
+document.querySelector(".auth-btn.signup").addEventListener("click", () => {
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  if(!name || !phone) return alert("Enter all fields");
+
+  let users = JSON.parse(localStorage.getItem("drivers")) || [];
+  if(users.find(u => u.phone === phone)) return alert("User already exists");
+
+  const newUser = { role: "driver", name, phone };
+  users.push(newUser);
+  localStorage.setItem("drivers", JSON.stringify(users));
+  localStorage.setItem("user", JSON.stringify(newUser));
+
+  window.location.href = "driver-dashboard.html";
+});
+</script>
+
+</body>
+</html>

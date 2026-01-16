@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RaastaX | Add Trip</title>
+  <link rel="stylesheet" href="add-trip.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">RaastaX</div>
+  <nav>
+    <a href="driver.html">Dashboard</a>
+    <a href="my-trips.html">My Trips</a>
+    <a href="add-trip.html" class="active">Add Trip</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="earnings.html">Earnings</a>
+    <a href="settings.html">Settings</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>Add Trip</h1>
+  <form id="addTripForm">
+    <div class="row">
+      <div>
+        <label for="carBrand">Car Brand</label>
+        <select id="carBrand" required>
+          <option value="">Select Brand</option>
+        </select>
+      </div>
+      <div>
+        <label for="carModel">Car Model</label>
+        <select id="carModel" required>
+          <option value="">Select Model</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="pickup">Pickup Location</label>
+        <select id="pickup" required>
+          <option value="">Select Pickup</option>
+        </select>
+      </div>
+      <div>
+        <label for="destination">Destination</label>
+        <select id="destination" required>
+          <option value="">Select Destination</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="trip-date">Date:</label>
+        <input type="date" id="trip-date" name="date" required>
+      </div>
+      <div>
+        <label for="seats">Seats Available</label>
+        <select id="seats" required>
+          <option value="">Select Seats</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="fare">Fare (PKR)</label>
+        <input type="number" id="fare" required>
+      </div>
+    </div>
+
+    <button type="submit">Publish Trip</button>
+  </form>
+
+  <div id="success-msg">Trip published successfully 🚗</div>
+</div>
+
+<script src="add-trip.js"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  color: #0a1f44;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ccc;
+}
+
+.navbar .logo a {
+  color: #0a1f44;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav-links a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #0a1f44;
+  font-weight: 500;
+}
+
+.payment-main {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.step {
+  text-align: center;
+  flex: 1;
+  color: #888;
+}
+
+.step.active {
+  color: #0a1f44;
+  font-weight: bold;
+}
+
+.step.completed {
+  color: #0a1f44;
+}
+
+.step i {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.payment-content h2, .payment-content h3 {
+  margin-bottom: 15px;
+}
+
+.summary {
+  background: #f5f8ff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+#payment-method {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#pay-btn {
+  background: #0a1f44;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}

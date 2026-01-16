@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RaastaCare – Family Trip Tracking</title>
+
+  <style>
+    :root {
+      --dark-blue: #0a1f44;
+      --white: #ffffff;
+      --light-blue: #e6ecf5;
+      --accent: #1f4fd8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background-color: var(--light-blue);
+      color: var(--dark-blue);
+    }
+
+    /* HEADER */
+    header {
+      background: var(--dark-blue);
+      color: var(--white);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+
+    header span {
+      color: #6fa3ff;
+    }
+
+    /* HERO */
+    .hero {
+      background: var(--white);
+      padding: 60px 40px;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      max-width: 700px;
+      margin: auto;
+      color: #444;
+    }
+
+    .hero button {
+      margin-top: 30px;
+      padding: 14px 30px;
+      border: none;
+      background: var(--accent);
+      color: var(--white);
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* FEATURES */
+    .features {
+      padding: 60px 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+
+    .feature-card h3 {
+      margin-bottom: 10px;
+      color: var(--dark-blue);
+    }
+
+    .feature-card p {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* TRACKING MOCK */
+    .tracking {
+      background: var(--dark-blue);
+      color: var(--white);
+      padding: 60px 40px;
+      text-align: center;
+    }
+
+    .tracking h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .tracking-box {
+      margin: auto;
+      max-width: 500px;
+      background: var(--white);
+      color: var(--dark-blue);
+      padding: 25px;
+      border-radius: 10px;
+    }
+
+    .status {
+      font-weight: bold;
+      margin-top: 10px;
+      color: #d88b1f;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark-blue);
+      color: var(--white);
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Raasta<span>X</span></h1>
+    <p>RaastaCare</p>
+  </header>
+
+  <section class="hero">
+    <h2>Travel Without Worry</h2>
+    <p>
+      RaastaCare keeps your family informed during long journeys — even in
+      low-signal areas like Dassu and Patan.
+    </p>
+    <button>Enable RaastaCare</button>
+  </section>
+
+  <section class="features">
+    <div class="feature-card">
+      <h3>📍 Live + Estimated Tracking</h3>
+      <p>
+        Real GPS when signal is available. Smart estimation when network drops.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <h3>👨‍👩‍👧 Family Tracking Link</h3>
+      <p>
+        Share a simple link with family — no app required.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <h3>🚗 Stop Detection</h3>
+      <p>
+        Automatically detects stops for breaks or meals.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <h3>🛡 Verified Drivers</h3>
+      <p>
+        CNIC and vehicle-verified drivers only for inter-city travel.
+      </p>
+    </div>
+  </section>
+
+  <section class="tracking">
+    <h2>Live Trip Status</h2>
+
+    <div class="tracking-box">
+      <p><strong>Route:</strong> Gilgit → Islamabad</p>
+      <p><strong>Last Known Location:</strong> Near Dassu</p>
+      <p class="status">Estimated Location (Low Signal)</p>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 RaastaX — RaastaCare for Safety & Trust
+  </footer>
+
+</body>
+</html>
