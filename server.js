@@ -1,27 +1,32 @@
 const express = require('express');
 const app = express();
 
+// Simple response for ALL routes
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+  next();
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// Test
-app.get('/', (req, res) => {
+// All other routes
+app.get('*', (req, res) => {
   res.send(`
     <html>
       <body>
-        <h1>raastaX on PORT 3000</h1>
-        <p>If you see this, Railway is working!</p>
-        <p>Port: 3000</p>
+        <h1>✅ raastaX is RUNNING!</h1>
+        <p>Time: ${new Date().toISOString()}</p>
+        <p>Request: ${req.url}</p>
+        <p><a href="/health">Health Check</a></p>
       </body>
     </html>
   `);
 });
 
-// FORCE PORT 3000 - ignore Railway's PORT variable
-const PORT = 3000; // Hardcode to 3000
+const PORT = 3000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ FORCED to port ${PORT}`);
-  console.log(`✅ Railway URL: https://raastax-production.up.railway.app`);
+  console.log(`✅ Server forced to port ${PORT}`);
 });
