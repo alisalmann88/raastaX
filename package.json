@@ -1,7 +1,7 @@
 {
   "name": "raastax",
   "version": "1.0.0",
-  "description": "",
+  "description": "RaastaX ride sharing app",
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
