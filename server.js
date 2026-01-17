@@ -1,50 +1,33 @@
 const express = require("express");
-const db = require("./db");
 const path = require("path");
 
 const app = express();
 
-// Log all requests
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
-  next();
-});
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
-// Serve static files
-app.use(express.static("public"));
-
-// Simple health check
+// Health endpoint (Railway checks this)
 app.get("/health", (req, res) => {
-  console.log("Health check called");
-  res.json({ status: "OK", time: new Date().toISOString() });
+  res.status(200).json({ 
+    status: "healthy",
+    timestamp: new Date().toISOString()
+  });
 });
 
-// API routes
-app.get("/api/trips", async (req, res) => {
-  try {
-    const [trips] = await db.query("SELECT * FROM trips");
-    res.json(trips || []);
-  } catch (err) {
-    console.error("DB error:", err);
-    res.status(500).json({ error: "Database error" });
-  }
+// API endpoints placeholder
+app.get("/api/trips", (req, res) => {
+  res.json([{ message: "Trips endpoint" }]);
 });
 
-// SPA fallback
+// All other routes serve index.html for SPA
 app.get("*", (req, res) => {
-  console.log("Serving index.html for:", req.url);
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Get port from Railway or default
-const PORT = process.env.PORT || 8080;
-const HOST = "0.0.0.0";
-
-app.listen(PORT, HOST, () => {
-  console.log("=".repeat(50));
-  console.log(`🚀 Server started at http://${HOST}:${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔧 PORT from env: ${process.env.PORT || 'Not set'}`);
-  console.log(`🗺️ Railway URL: ${process.env.RAILWAY_PUBLIC_DOMAIN || 'Not set'}`);
-  console.log("=".repeat(50));
+// Railway provides PORT, use 3000 as fallback
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`🌐 Access URL: https://raastax-production.up.railway.app`);
 });
