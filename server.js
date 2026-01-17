@@ -22,10 +22,12 @@ app.get("/", (req, res) => {
 app.get("/trips", async (req, res) => {
   try {
     const [trips] = await db.query("SELECT * FROM trips");
-    const formatted = trips.map(t => {
+    const formatted = trips.map((t) => {
       let bookedSeats = [];
       if (t.bookedSeats) {
-        try { bookedSeats = JSON.parse(t.bookedSeats); } catch {}
+        try {
+          bookedSeats = JSON.parse(t.bookedSeats);
+        } catch {}
       }
 
       const tripDate = new Date(t.date);
@@ -64,7 +66,9 @@ app.post("/trips", async (req, res) => {
 // Book seats
 app.post("/book", async (req, res) => {
   const { tripId, seats, passengers } = req.body;
-  if (!tripId || !seats || !passengers) return res.status(400).json({ message: "Missing fields" });
+  if (!tripId || !seats || !passengers) {
+    return res.status(400).json({ message: "Missing fields" });
+  }
 
   try {
     const [rows] = await db.query("SELECT bookedSeats FROM trips WHERE id = ?", [tripId]);
@@ -72,10 +76,14 @@ app.post("/book", async (req, res) => {
 
     let bookedSeats = [];
     if (rows[0].bookedSeats) {
-      try { bookedSeats = JSON.parse(rows[0].bookedSeats); } catch {}
+      try {
+        bookedSeats = JSON.parse(rows[0].bookedSeats);
+      } catch {}
     }
 
-    for (let s of seats) if (bookedSeats.includes(s)) return res.status(400).json({ message: `Seat ${s} booked` });
+    for (let s of seats) {
+      if (bookedSeats.includes(s)) return res.status(400).json({ message: `Seat ${s} booked` });
+    }
 
     bookedSeats.push(...seats);
     await db.query("UPDATE trips SET bookedSeats = ? WHERE id = ?", [JSON.stringify(bookedSeats), tripId]);
@@ -87,21 +95,8 @@ app.post("/book", async (req, res) => {
   }
 });
 
-// Catch-all route to serve index.html for frontend routing
-// APIs ABOVE
-app.post("/book", async (req, res) => {
-
-});
-
-// Catch-all (LAST)
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// Start server
-const PORT = process.env.PORT || 8080;
+// ===== Start server =====
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
-});
-
 });
