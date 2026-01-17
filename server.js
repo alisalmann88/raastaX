@@ -87,10 +87,16 @@ app.post("/book", async (req, res) => {
   }
 });
 
+// Catch-all route to serve index.html for frontend routing
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
 // ===== Start server =====
 const PORT = process.env.PORT;
-if (!PORT) throw new Error("PORT not defined by Railway");
+if (!PORT) throw new Error("PORT is not defined by Railway");
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
