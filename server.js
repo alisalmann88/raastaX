@@ -1,17 +1,102 @@
+// server.js
 const express = require("express");
+const cors = require("cors");
 const path = require("path");
+const db = require("./db"); // safe db.js you already made
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 
-// Serve static files
+// ===== Static files =====
 app.use(express.static(path.join(__dirname, "public")));
 
-// Test route
+// ===== Healthcheck =====
 app.get("/ping", (req, res) => res.send("pong"));
 
-// Root route
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public/index.html")));
+// Serve index.html at root
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
 
-// Start server
+// ===== API routes =====
+
+// Get all trips
+app.get("/trips", async (req, res) => {
+  try {
+    const [trips] = await db.query("SELECT * FROM trips");
+    const formatted = trips.map(t => {
+      let bookedSeats = [];
+      if (t.bookedSeats) {
+        try { bookedSeats = JSON.parse(t.bookedSeats); } catch {}
+      }
+
+      const tripDate = new Date(t.date);
+      tripDate.setMinutes(tripDate.getMinutes() + 5 * 60); // Pakistan UTC+5
+      const dateString = tripDate.toISOString().split("T")[0];
+
+      return { ...t, bookedSeats, date: dateString };
+    });
+    res.json(formatted);
+  } catch (err) {
+    console.error("DB fetch error:", err);
+    res.status(500).json({ message: "Database error" });
+  }
+});
+
+// Add a trip
+app.post("/trips", async (req, res) => {
+  const { driverName, carModel, pickup, destination, date, seats, fare } = req.body;
+  if (!driverName || !carModel || !pickup || !destination || !date || !seats || !fare) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const [result] = await db.query(
+      `INSERT INTO trips (driverName, carModel, pickup, destination, date, seats, fare, bookedSeats)
+       VALUES (?, ?, ?, ?, ?, ?, ?, '[]')`,
+      [driverName, carModel, pickup, destination, date, seats, fare]
+    );
+    res.status(201).json({ message: "Trip added", tripId: result.insertId });
+  } catch (err) {
+    console.error("DB insert error:", err);
+    res.status(500).json({ message: "Database error" });
+  }
+});
+
+// Book seats
+app.post("/book", async (req, res) => {
+  const { tripId, seats, passengers } = req.body;
+  if (!tripId || !seats || !passengers) return res.status(400).json({ message: "Missing fields" });
+
+  try {
+    const [rows] = await db.query("SELECT bookedSeats FROM trips WHERE id = ?", [tripId]);
+    if (!rows.length) return res.status(404).json({ message: "Trip not found" });
+
+    let bookedSeats = [];
+    if (rows[0].bookedSeats) {
+      try { bookedSeats = JSON.parse(rows[0].bookedSeats); } catch {}
+    }
+
+    for (let s of seats) if (bookedSeats.includes(s)) return res.status(400).json({ message: `Seat ${s} booked` });
+
+    bookedSeats.push(...seats);
+    await db.query("UPDATE trips SET bookedSeats = ? WHERE id = ?", [JSON.stringify(bookedSeats), tripId]);
+
+    res.json({ success: true, bookedSeats });
+  } catch (err) {
+    console.error("DB update error:", err);
+    res.status(500).json({ message: "Database error" });
+  }
+});
+
+// ===== Catch all undefined routes =====
+app.get("*", (req, res) => {
+  res.status(404).send("Not Found");
+});
+
+// ===== Start server =====
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
