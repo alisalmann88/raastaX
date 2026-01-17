@@ -8,13 +8,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files
+// Serve static files from public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Home route
+// Serve index.html at root
 app.get("/", (req, res) => {
-  res.send("RaastaX server running ✅");
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
+
+// ===== API =====
 
 // Get all trips
 app.get("/trips", async (req, res) => {
@@ -85,7 +87,7 @@ app.post("/book", async (req, res) => {
   }
 });
 
-// Start server
+// ===== Start server =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
