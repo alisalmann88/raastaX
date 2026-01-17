@@ -16,6 +16,8 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// API Routes
+
 // Get all trips
 app.get("/trips", async (req, res) => {
   try {
@@ -85,13 +87,13 @@ app.post("/book", async (req, res) => {
   }
 });
 
-// Catch-all for undefined routes (no wildcard '*')
-app.use((req, res, next) => {
-  res.status(404).send("Not Found");
+// Catch-all: for any other route, serve index.html (SPA support)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
