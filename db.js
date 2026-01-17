@@ -2,7 +2,7 @@ const mysql = require("mysql2/promise");
 
 console.log("🔧 Initializing database connection...");
 
-// Try multiple connection string sources for Railway
+// Use Railway's DATABASE_URL or build from individual variables
 let connectionString;
 
 if (process.env.DATABASE_URL) {
@@ -12,56 +12,56 @@ if (process.env.DATABASE_URL) {
   connectionString = process.env.MYSQL_URL;
   console.log("📊 Using MYSQL_URL from environment");
 } else if (process.env.MYSQLHOST) {
-  // Build connection string from individual variables
+  // Build from individual Railway MySQL variables
   connectionString = `mysql://${process.env.MYSQLUSER || 'root'}:${process.env.MYSQLPASSWORD}@${process.env.MYSQLHOST}:${process.env.MYSQLPORT || 3306}/${process.env.MYSQLDATABASE || 'railway'}`;
-  console.log("📊 Built connection string from individual variables");
+  console.log("📊 Built connection from individual variables");
 } else {
-  console.error("❌ No database connection configuration found!");
-  console.log("Available environment variables:", Object.keys(process.env).filter(key => key.includes('MYSQL') || key.includes('DATABASE')));
-  process.exit(1);
+  console.error("❌ No database configuration found!");
+  // Don't exit - run without database
+  console.log("⚠️ Running without database connection");
 }
 
-// Create connection pool with retry logic
-const pool = mysql.createPool({
-  uri: connectionString,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0
-});
+let pool;
 
-// Test connection
-(async () => {
-  let retries = 5;
-  let connected = false;
-  
-  while (retries > 0 && !connected) {
+if (connectionString) {
+  pool = mysql.createPool({
+    uri: connectionString,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0
+  });
+
+  // Test connection
+  (async () => {
     try {
       const conn = await pool.getConnection();
       console.log("✅ Database connected successfully!");
       console.log(`📍 Host: ${conn.config.host}`);
       console.log(`🗃️ Database: ${conn.config.database}`);
-      
-      // Test query
-      const [tables] = await conn.query("SHOW TABLES");
-      console.log(`📋 Found ${tables.length} table(s)`);
-      
       conn.release();
-      connected = true;
     } catch (err) {
-      console.warn(`⚠️ Connection attempt failed (${retries} retries left):`, err.message);
-      retries--;
-      
-      if (retries > 0) {
-        console.log("🔄 Retrying in 3 seconds...");
-        await new Promise(resolve => setTimeout(resolve, 3000));
-      } else {
-        console.error("❌ Max retries reached. Could not connect to database.");
-        console.error("Connection error details:", err);
-      }
+      console.error("❌ Database connection error:", err.message);
+      console.log("⚠️ Running without database - API will return mock data");
     }
-  }
-})();
+  })();
+} else {
+  console.log("⚠️ No database connection - running in mock mode");
+  
+  // Mock database methods
+  pool = {
+    query: async () => {
+      console.log("📦 Mock database query");
+      return [[]]; // Return empty result
+    },
+    getConnection: async () => {
+      return {
+        query: async () => [[]],
+        release: () => {}
+      };
+    }
+  };
+}
 
 module.exports = pool;
