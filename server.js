@@ -11,12 +11,10 @@ app.use(express.json());
 // Serve static files from public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Serve index.html at root
+// Home route
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/index.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-
-// ===== API =====
 
 // Get all trips
 app.get("/trips", async (req, res) => {
@@ -75,7 +73,7 @@ app.post("/book", async (req, res) => {
       try { bookedSeats = JSON.parse(rows[0].bookedSeats); } catch {}
     }
 
-    for (let s of seats) if (bookedSeats.includes(s)) return res.status(400).json({ message: `Seat ${s} already booked` });
+    for (let s of seats) if (bookedSeats.includes(s)) return res.status(400).json({ message: `Seat ${s} booked` });
 
     bookedSeats.push(...seats);
     await db.query("UPDATE trips SET bookedSeats = ? WHERE id = ?", [JSON.stringify(bookedSeats), tripId]);
@@ -87,12 +85,12 @@ app.post("/book", async (req, res) => {
   }
 });
 
-// ===== Catch all undefined routes (Express 5 safe) =====
-app.all("/*", (req, res) => {
+// Catch-all for undefined routes (no wildcard '*')
+app.use((req, res, next) => {
   res.status(404).send("Not Found");
 });
 
-// ===== Start server =====
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
