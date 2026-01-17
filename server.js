@@ -88,7 +88,9 @@ app.post("/book", async (req, res) => {
 });
 
 // ===== Start server =====
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
+if (!PORT) throw new Error("PORT not defined by Railway");
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
