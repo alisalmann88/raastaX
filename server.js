@@ -1,25 +1,22 @@
 // server.js
 const express = require("express");
 const cors = require("cors");
+const db = require("./db");
 const path = require("path");
-const db = require("./db"); // safe db.js you already made
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ===== Static files =====
+// Serve static files from public folder
 app.use(express.static(path.join(__dirname, "public")));
-
-// ===== Healthcheck =====
-app.get("/ping", (req, res) => res.send("pong"));
 
 // Serve index.html at root
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-// ===== API routes =====
+// ===== API =====
 
 // Get all trips
 app.get("/trips", async (req, res) => {
@@ -78,7 +75,7 @@ app.post("/book", async (req, res) => {
       try { bookedSeats = JSON.parse(rows[0].bookedSeats); } catch {}
     }
 
-    for (let s of seats) if (bookedSeats.includes(s)) return res.status(400).json({ message: `Seat ${s} booked` });
+    for (let s of seats) if (bookedSeats.includes(s)) return res.status(400).json({ message: `Seat ${s} already booked` });
 
     bookedSeats.push(...seats);
     await db.query("UPDATE trips SET bookedSeats = ? WHERE id = ?", [JSON.stringify(bookedSeats), tripId]);
@@ -90,8 +87,8 @@ app.post("/book", async (req, res) => {
   }
 });
 
-// ===== Catch all undefined routes =====
-app.get("*", (req, res) => {
+// ===== Catch all undefined routes (Express 5 safe) =====
+app.all("/*", (req, res) => {
   res.status(404).send("Not Found");
 });
 
