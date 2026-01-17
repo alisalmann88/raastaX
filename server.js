@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const cors = require("cors");
 const db = require("./db");
@@ -11,7 +10,12 @@ app.use(express.json());
 // Serve static files from public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// ----------- API ROUTES ------------ //
+// Home route (optional, your SPA catch-all handles it too)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ==================== API ROUTES ==================== //
 
 // Get all trips
 app.get("/trips", async (req, res) => {
@@ -82,15 +86,14 @@ app.post("/book", async (req, res) => {
   }
 });
 
-// ----------- CATCH-ALL ROUTE FOR SPA ------------ //
+// ==================== CATCH-ALL FOR FRONTEND SPA ==================== //
 
-// Any other route should serve index.html (for your frontend)
-app.get("/*", (req, res) => {
+// This fixes the PathError in Node 22 + Express
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Start server
+// ==================== START SERVER ==================== //
+
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
