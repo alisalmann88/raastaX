@@ -1,80 +1,50 @@
 const express = require("express");
-const cors = require("cors");
 const db = require("./db");
 const path = require("path");
 
 const app = express();
 
-// ==================== MIDDLEWARE ==================== //
-app.use(cors());
-app.use(express.json());
-
-// ==================== STATIC FILES ==================== //
-app.use(express.static(path.join(__dirname, "public")));
-
-// ==================== HEALTH CHECK (CRITICAL) ==================== //
-app.get("/health", (req, res) => {
-  res.status(200).json({ 
-    status: "OK", 
-    message: "raastaX is running",
-    timestamp: new Date().toISOString()
-  });
+// Log all requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+  next();
 });
 
-// ==================== API ROUTES ==================== //
-app.get("/trips", async (req, res) => {
+// Serve static files
+app.use(express.static("public"));
+
+// Simple health check
+app.get("/health", (req, res) => {
+  console.log("Health check called");
+  res.json({ status: "OK", time: new Date().toISOString() });
+});
+
+// API routes
+app.get("/api/trips", async (req, res) => {
   try {
     const [trips] = await db.query("SELECT * FROM trips");
     res.json(trips || []);
   } catch (err) {
-    console.error("Database error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error("DB error:", err);
+    res.status(500).json({ error: "Database error" });
   }
 });
 
-app.post("/trips", async (req, res) => {
-  try {
-    const { driverName, carModel, pickup, destination, date, seats, fare } = req.body;
-    const [result] = await db.query(
-      `INSERT INTO trips (driverName, carModel, pickup, destination, date, seats, fare, bookedSeats)
-       VALUES (?, ?, ?, ?, ?, ?, ?, '[]')`,
-      [driverName, carModel, pickup, destination, date, seats, fare]
-    );
-    res.json({ message: "Trip added", tripId: result.insertId });
-  } catch (err) {
-    console.error("Insert error:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-app.post("/book", async (req, res) => {
-  try {
-    const { tripId, seats } = req.body;
-    const [rows] = await db.query("SELECT bookedSeats FROM trips WHERE id = ?", [tripId]);
-    
-    let bookedSeats = [];
-    if (rows[0].bookedSeats) {
-      try { bookedSeats = JSON.parse(rows[0].bookedSeats); } catch {}
-    }
-    
-    bookedSeats.push(...seats);
-    await db.query("UPDATE trips SET bookedSeats = ? WHERE id = ?", 
-      [JSON.stringify(bookedSeats), tripId]);
-    
-    res.json({ success: true });
-  } catch (err) {
-    console.error("Booking error:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// ==================== SPA CATCH-ALL ==================== //
+// SPA fallback
 app.get("*", (req, res) => {
+  console.log("Serving index.html for:", req.url);
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// ==================== START SERVER ==================== //
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ raastaX server listening on port ${PORT}`);
+// Get port from Railway or default
+const PORT = process.env.PORT || 8080;
+const HOST = "0.0.0.0";
+
+app.listen(PORT, HOST, () => {
+  console.log("=".repeat(50));
+  console.log(`🚀 Server started at http://${HOST}:${PORT}`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔧 PORT from env: ${process.env.PORT || 'Not set'}`);
+  console.log(`🗺️ Railway URL: ${process.env.RAILWAY_PUBLIC_DOMAIN || 'Not set'}`);
+  console.log("=".repeat(50));
 });
