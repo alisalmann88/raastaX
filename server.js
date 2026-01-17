@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const helmet = require("helmet");
 const db = require("./db");
 const path = require("path");
 
@@ -9,17 +8,6 @@ const app = express();
 // ==================== SECURITY & MIDDLEWARE ==================== //
 
 // Security headers
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      fontSrc: ["'self'", "https://cdnjs.cloudflare.com"],
-      imgSrc: ["'self'", "data:", "https:"]
-    }
-  }
-}));
 
 // CORS configuration for Railway
 app.use(cors({
