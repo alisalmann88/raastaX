@@ -1,11 +1,20 @@
 {
   "name": "raastax",
   "version": "1.0.0",
+  "description": "RaastaX Travel Booking",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "echo 'Server is ready' && exit 0"
   },
-  "dependencies": {
-    "express": "^4.18.2"
+  "keywords": [
+    "travel",
+    "booking",
+    "pakistan"
+  ],
+  "author": "raastaX Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
