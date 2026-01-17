@@ -11,12 +11,7 @@ app.use(express.json());
 // Serve static files from public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Home route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// API Routes
+// ----------- API ROUTES ------------ //
 
 // Get all trips
 app.get("/trips", async (req, res) => {
@@ -87,13 +82,15 @@ app.post("/book", async (req, res) => {
   }
 });
 
-// Catch-all: for any other route, serve index.html (SPA support)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// ----------- CATCH-ALL ROUTE FOR SPA ------------ //
+
+// Any other route should serve index.html (for your frontend)
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
