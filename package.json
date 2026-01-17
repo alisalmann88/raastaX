@@ -6,8 +6,9 @@
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "main": "add-trip.js",
+  "main": "server.js",   // <- change this
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
