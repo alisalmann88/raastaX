@@ -1,9 +1,16 @@
 // db.js
 const mysql = require("mysql2/promise");
 
-// Use the full DATABASE_URL from Railway
+// DATABASE_URL comes from Railway variables
+// e.g., DATABASE_URL=mysql://root:password@host:3306/dbname
+if (!process.env.DATABASE_URL) {
+  console.error("❌ DATABASE_URL is not set");
+  process.exit(1);
+}
+
 const pool = mysql.createPool(process.env.DATABASE_URL);
 
+// Test connection at startup
 (async () => {
   try {
     const conn = await pool.getConnection();
