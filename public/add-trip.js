@@ -23,34 +23,55 @@ document.addEventListener('DOMContentLoaded', function() {
   const seatsSelect = document.getElementById("seats");
   const fareInput = document.getElementById("fare");
 
-  // Get logged-in user
+  // Get logged-in driver - IMPROVED VERSION
   function getLoggedInDriver() {
-    try {
-      const user = JSON.parse(localStorage.getItem("user")) || {};
-      console.log("Current user from localStorage:", user);
-      
-      // If user is logged in as driver
-      if (user.role === "driver" && (user.name || user.phone)) {
-        return user.name || user.phone;
-      }
-      
-      // If driver is logged in via driver-auth
-      const driver = JSON.parse(localStorage.getItem("driver")) || {};
-      if (driver.name || driver.phone) {
-        return driver.name || driver.phone;
-      }
-      
-      // Check if there's any user info
-      const passenger = JSON.parse(localStorage.getItem("passengerName"));
-      if (passenger) {
-        return passenger;
-      }
-      
-      return "Driver"; // Default fallback
-    } catch (error) {
-      console.error("Error getting user:", error);
+    console.log("🔍 Checking for logged-in driver...");
+    
+    // Try multiple sources
+    let driver = null;
+    
+    // 1. Check user object (from auth)
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+    console.log("User from localStorage:", user);
+    
+    if (user.role === "driver" && user.name) {
+      console.log("✅ Found driver in user object:", user.name);
+      return user.name;
+    }
+    
+    // 2. Check dedicated driver object
+    const driverObj = JSON.parse(localStorage.getItem("driver")) || {};
+    console.log("Driver object from localStorage:", driverObj);
+    
+    if (driverObj.name) {
+      console.log("✅ Found driver in driver object:", driverObj.name);
+      return driverObj.name;
+    }
+    
+    // 3. Check if any name exists
+    if (user.name) {
+      console.log("✅ Using name from user object:", user.name);
+      return user.name;
+    }
+    
+    // 4. Check passenger name (fallback)
+    const passengerName = localStorage.getItem("passengerName");
+    if (passengerName) {
+      console.log("⚠️ Using passenger name as fallback:", passengerName);
+      return passengerName;
+    }
+    
+    // 5. Last resort - check if we're on driver page
+    if (window.location.pathname.includes("driver") || 
+        window.location.pathname.includes("add-trip")) {
+      console.log("⚠️ On driver page but no driver logged in");
+      alert("Please log in as a driver first!");
+      window.location.href = "driver-auth.html";
       return "Driver";
     }
+    
+    console.log("❌ No driver found, using default");
+    return "Driver";
   }
 
   // Initialize dropdowns
@@ -71,13 +92,16 @@ document.addEventListener('DOMContentLoaded', function() {
       destinationSelect.innerHTML += `<option value="${loc}">${loc}</option>`;
     });
     
-    // Set driver name from logged-in user
+    // Get and set driver name
     const loggedInDriver = getLoggedInDriver();
-    console.log("Setting driver name to:", loggedInDriver);
+    console.log("Driver name to use:", loggedInDriver);
     
     if (driverNameInput) {
       driverNameInput.value = loggedInDriver;
-      driverNameInput.readOnly = true; // Make it read-only since we auto-fill it
+      // Make it read-only and show it's auto-filled
+      driverNameInput.readOnly = true;
+      driverNameInput.style.background = "#f0f0f0";
+      driverNameInput.style.color = "#666";
       driverNameInput.title = "Driver name is automatically set from your login";
     }
     
@@ -95,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
     dateInput.valueAsDate = tomorrow;
     dateInput.min = new Date().toISOString().split('T')[0];
     
-    console.log("✅ Form initialized with driver:", loggedInDriver);
+    console.log("✅ Form initialized for driver:", loggedInDriver);
   }
 
   // Update car models when brand changes
@@ -116,12 +140,13 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
     console.log("📤 Form submission started...");
     
-    // Get driver name from localStorage (not from input field)
+    // Get driver name from localStorage
     const loggedInDriver = getLoggedInDriver();
+    console.log("Using driver name for trip:", loggedInDriver);
     
     // Collect form data
     const formData = {
-      driverName: loggedInDriver, // ✅ Use logged-in driver name
+      driverName: loggedInDriver, // ✅ This is the key fix
       carModel: modelSelect.value,
       pickup: pickupSelect.value,
       destination: destinationSelect.value,
@@ -130,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fare: parseInt(fareInput.value)
     };
     
-    console.log("📝 Form data (with auto driver name):", formData);
+    console.log("📝 Form data to send:", formData);
     
     // Validation
     let isValid = true;
@@ -162,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     try {
       console.log("🌐 Sending request to /api/trips...");
-      console.log("Driver name being sent:", formData.driverName);
       
       const response = await fetch('/api/trips', {
         method: 'POST',
@@ -179,15 +203,16 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log("📦 Response data:", result);
       
       if (response.ok && result.success) {
-        alert(`✅ Trip added successfully!\nDriver: ${formData.driverName}\nTrip ID: ${result.tripId}\n\nYou will be redirected to My Trips.`);
+        // Show success with driver name
+        alert(`✅ Trip added successfully!\nDriver: ${formData.driverName}\nFrom: ${formData.pickup} → ${formData.destination}\nTrip ID: ${result.tripId}\n\nRedirecting to My Trips...`);
         
         // Clear form but keep driver name
-        brandSelect.value = "";
-        modelSelect.innerHTML = '<option value="">Select Model</option>';
-        pickupSelect.value = "";
-        destinationSelect.value = "";
-        seatsSelect.value = "";
-        fareInput.value = "";
+        brandSelect.value = "Toyota";
+        updateCarModels();
+        pickupSelect.value = "Islamabad";
+        destinationSelect.value = "Gilgit";
+        seatsSelect.value = "4";
+        fareInput.value = "5000";
         
         // Set date to tomorrow again
         const tomorrow = new Date();
@@ -205,27 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
     } catch (error) {
       console.error("🔥 Fetch error:", error);
-      alert(`❌ Network error:\n${error.message}\n\nPlease check console for details.`);
-      
-      // Try with full URL as fallback
-      try {
-        console.log("🔄 Trying with full URL...");
-        const fullUrl = window.location.origin + '/api/trips';
-        const response2 = await fetch(fullUrl, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(formData)
-        });
-        const result2 = await response2.json();
-        console.log("Full URL response:", result2);
-        if (result2.success) {
-          alert("✅ Trip added via fallback URL!");
-        } else {
-          alert("Fallback error: " + JSON.stringify(result2));
-        }
-      } catch (error2) {
-        console.error("Fallback also failed:", error2);
-      }
+      alert(`❌ Network error:\n${error.message}\n\nPlease try again.`);
       
     } finally {
       // Restore button
@@ -241,15 +246,18 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeForm();
   console.log("🎉 add-trip.js setup complete");
   
-  // Debug: log all localStorage items
-  console.log("=== LOCALSTORAGE DEBUG ===");
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    try {
-      const value = JSON.parse(localStorage.getItem(key));
-      console.log(key + ":", value);
-    } catch {
-      console.log(key + ":", localStorage.getItem(key));
-    }
-  }
+  // Debug function - add to window for testing
+  window.debugDriver = function() {
+    console.log("=== DRIVER DEBUG ===");
+    console.log("localStorage user:", JSON.parse(localStorage.getItem("user")));
+    console.log("localStorage driver:", JSON.parse(localStorage.getItem("driver")));
+    console.log("localStorage drivers:", JSON.parse(localStorage.getItem("drivers")));
+    console.log("localStorage passengerName:", localStorage.getItem("passengerName"));
+    console.log("Current driver name (from getLoggedInDriver):", getLoggedInDriver());
+  };
+  
+  // Auto-debug on load
+  setTimeout(() => {
+    window.debugDriver();
+  }, 1000);
 });
