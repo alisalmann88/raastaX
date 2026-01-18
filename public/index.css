@@ -1,261 +1,125 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
-}
-
-:root {
-  --blue: #0b3c5d;
-  --blue-light: #eaf2ff;
-  --white: #ffffff;
-  --gray: #666;
-  --accent: #ff7a59;
-}
-
-/* HEADER */
-header {
-  background: var(--white);
-  border-bottom: 2px solid #f0f0f0;
-  padding: 20px 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--blue);
-}
-
-.nav-links a, .nav-links label {
-  margin-left: 25px;
-  text-decoration: none;
-  color: var(--blue);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* HERO */
-.hero {
-  background:
-    linear-gradient(rgba(11,60,93,0.85), rgba(11,60,93,0.85)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
-  background-size: cover;
-  background-position: center;
-  padding: 120px 60px 160px;
-  color: var(--white);
-  text-align: center;
-}
-
-.launch {
-  background: rgba(255,255,255,0.15);
-  display: inline-block;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-
-.hero h1 {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.subtitle {
-  font-size: 18px;
-  opacity: 0.9;
-}
-
-/* DYNAMIC ISLAND */
-.search-island {
-  background: var(--white);
-  margin: 50px auto 0;
-  padding: 20px;
-  border-radius: 50px;
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  max-width: 1100px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-}
-
-.field {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 18px;
-  border-right: 1px solid #eee;
-  flex: 1;
-}
-
-.field:last-of-type {
-  border-right: none;
-}
-
-.field i {
-  color: var(--blue);
-}
-
-.field select,
-.field input {
-  border: none;
-  outline: none;
-  font-size: 14px;
-  width: 100%;
-}
-
-.search-btn {
-  background: var(--accent);
-  border: none;
-  color: var(--white);
-  padding: 14px 28px;
-  border-radius: 30px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-/* TRUST STRIP */
-.trust-strip {
-  background: var(--blue-light);
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  padding: 30px;
-  font-weight: 600;
-  color: var(--blue);
-}
-
-/* SUPPORT */
-.support {
-  background: var(--white);
-  text-align: center;
-  padding: 50px;
-}
-
-.support h2 {
-  color: var(--blue);
-  margin-bottom: 10px;
-}
-
-/* FOOTER */
-footer {
-  border-top: 2px solid #f0f0f0;
-  text-align: center;
-  padding: 18px;
-  color: var(--gray);
-}
-
-/* MODALS */
-.modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.modal-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-}
-
-.modal-content {
-  position: relative;
-  background: var(--white);
-  padding: 40px;
-  border-radius: 20px;
-  max-width: 400px;
-  width: 90%;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.modal-content input {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  width: 100%;
-}
-
-.modal-content .auth-methods {
-  display: flex;
-  gap: 10px;
-}
-
-.modal-content .auth-methods button {
-  flex: 1;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  background: var(--accent);
-  color: var(--white);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.modal-content .continue-btn {
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
+/* RAASATA CARE BUTTON */
+.raasta-care-btn {
   background: var(--blue);
   color: var(--white);
-  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  margin-left: 15px;
+  border: none;
   cursor: pointer;
 }
 
-/* Show modals when checkbox is checked */
-#passenger-auth-toggle:checked ~ .passenger-modal,
-#driver-auth-toggle:checked ~ .driver-modal {
-  display: flex;
+.raasta-care-btn:hover {
+  background: #1f4fd8;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(31, 79, 216, 0.3);
 }
-/* Header user dropdown */
+
+/* DRIVER BUTTON WITH ICON */
+#driver-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* NAV LINKS UPDATE */
 .nav-links {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.user-menu {
-  position: relative;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.user-menu .dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  min-width: 150px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  z-index: 1000;
-}
-
-.user-menu:hover .dropdown {
-  display: block;
-}
-
-.user-menu .dropdown a {
-  display: block;
-  padding: 8px 12px;
+.nav-links a {
   text-decoration: none;
-  color: #333;
-  font-size: 0.9rem;
+  color: var(--blue);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.user-menu .dropdown a:hover {
-  background: #f2f2f2;
+.nav-links a:hover {
+  color: #1f4fd8;
 }
 
+/* RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+  .search-island {
+    flex-wrap: wrap;
+    border-radius: 20px;
+    max-width: 90%;
+  }
+  
+  .field {
+    flex: 1 1 45%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+  }
+  
+  .field:last-of-type {
+    border-bottom: none;
+  }
+  
+  .search-btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .raasta-care-btn {
+    margin-left: 0;
+  }
+  
+  .hero {
+    padding: 80px 20px 120px;
+  }
+  
+  .hero h1 {
+    font-size: 36px;
+  }
+  
+  .trust-strip {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+  
+  .subtitle {
+    font-size: 16px;
+  }
+  
+  .search-island {
+    padding: 15px;
+  }
+  
+  .field {
+    flex: 1 1 100%;
+  }
+}
