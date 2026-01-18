@@ -69,7 +69,9 @@ document.getElementById("addTripForm").addEventListener("submit", async e => {
   }
 
   try {
-    const res = await fetch("http://localhost:3000/trips", {
+const res = await fetch("/api/trips", {
+
+  
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tripData)
