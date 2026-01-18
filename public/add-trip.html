@@ -136,5 +136,35 @@
 </div>
 
 <script src="add-trip.js"></script>
+  <button onclick="testAPI()" style="margin-top: 20px; background: green;">
+  Test API Connection
+</button>
+
+<script>
+async function testAPI() {
+  const testData = {
+    driverName: "Test Driver",
+    carModel: "Toyota Corolla",
+    pickup: "Islamabad",
+    destination: "Gilgit",
+    date: "2024-12-25",
+    seats: 4,
+    fare: 5000
+  };
+  
+  try {
+    const response = await fetch('/api/trips', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(testData)
+    });
+    
+    const result = await response.json();
+    alert(JSON.stringify(result, null, 2));
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+</script>
 </body>
 </html>
