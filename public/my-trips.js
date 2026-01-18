@@ -2,10 +2,27 @@ const myTripList = document.getElementById("my-trips-list");
 
 async function getTrips() {
   try {
-    const res = await fetch("http://localhost:3000/trips");
+    // ✅ FIXED: Changed from localhost:3000 to /api/trips
+    const res = await fetch("/api/trips");
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
     return await res.json();
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching trips:", err);
+    
+    // Try fallback URL
+    try {
+      const fallbackRes = await fetch("https://raastax-production.up.railway.app/api/trips");
+      if (fallbackRes.ok) {
+        return await fallbackRes.json();
+      }
+    } catch (fallbackErr) {
+      console.error("Fallback also failed:", fallbackErr);
+    }
+    
     return [];
   }
 }
@@ -13,7 +30,10 @@ async function getTrips() {
 async function showMyTrips() {
   myTripList.innerHTML = "";
   const trips = await getTrips();
-  const driverName = "Driver";
+  
+  // Get current driver name from localStorage
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const driverName = user.name || "Driver";
 
   const myTrips = trips.filter(t => t.driverName === driverName);
 
@@ -23,9 +43,8 @@ async function showMyTrips() {
   }
 
   myTrips.forEach(trip => {
-    // ✅ PKT-safe date
     const tripDate = new Date(trip.date);
-    tripDate.setHours(tripDate.getHours() + 5); // Pakistan UTC+5
+    tripDate.setHours(tripDate.getHours() + 5);
 
     const dateStr = tripDate.toLocaleDateString("en-US", {
       weekday: "short",
@@ -40,13 +59,12 @@ async function showMyTrips() {
       <h3>${trip.carModel}</h3>
       <p>${trip.pickup} → ${trip.destination}</p>
       <p>${dateStr}</p>
-      <p>Seats: ${trip.seats}</p>
+      <p>Seats: ${trip.availableSeats || trip.seats}</p>
       <p>PKR ${trip.fare}</p>
     `;
     myTripList.appendChild(div);
   });
 }
 
-// 🔄 Refresh every 3 sec
 showMyTrips();
-setInterval(showMyTrips, 3000);
+setInterval(showMyTrips, 5000); // Refresh every 5 seconds
