@@ -5,6 +5,49 @@
   <title>RaastaX | Add Trip</title>
   <link rel="stylesheet" href="add-trip.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Additional styles for new field */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #0b3c6d;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #09447a;
+    }
+    #success-msg {
+      display: none;
+      background: #10b981;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
 
@@ -21,17 +64,24 @@
 </header>
 
 <div class="container">
-  <h1>Add Trip</h1>
+  <h1>Add New Trip</h1>
   <form id="addTripForm">
+    
+    <!-- Driver Name Field - ADDED -->
+    <div class="form-group">
+      <label for="driverName">Driver Name *</label>
+      <input type="text" id="driverName" required placeholder="Enter your full name">
+    </div>
+
     <div class="row">
-      <div>
-        <label for="carBrand">Car Brand</label>
+      <div class="form-group">
+        <label for="carBrand">Car Brand *</label>
         <select id="carBrand" required>
           <option value="">Select Brand</option>
         </select>
       </div>
-      <div>
-        <label for="carModel">Car Model</label>
+      <div class="form-group">
+        <label for="carModel">Car Model *</label>
         <select id="carModel" required>
           <option value="">Select Model</option>
         </select>
@@ -39,14 +89,14 @@
     </div>
 
     <div class="row">
-      <div>
-        <label for="pickup">Pickup Location</label>
+      <div class="form-group">
+        <label for="pickup">Pickup Location *</label>
         <select id="pickup" required>
           <option value="">Select Pickup</option>
         </select>
       </div>
-      <div>
-        <label for="destination">Destination</label>
+      <div class="form-group">
+        <label for="destination">Destination *</label>
         <select id="destination" required>
           <option value="">Select Destination</option>
         </select>
@@ -54,12 +104,12 @@
     </div>
 
     <div class="row">
-      <div>
-        <label for="trip-date">Date:</label>
-        <input type="date" id="trip-date" name="date" required>
+      <div class="form-group">
+        <label for="trip-date">Trip Date *</label>
+        <input type="date" id="trip-date" required>
       </div>
-      <div>
-        <label for="seats">Seats Available</label>
+      <div class="form-group">
+        <label for="seats">Seats Available *</label>
         <select id="seats" required>
           <option value="">Select Seats</option>
           <option value="1">1</option>
@@ -70,17 +120,19 @@
       </div>
     </div>
 
-    <div class="row">
-      <div>
-        <label for="fare">Fare (PKR)</label>
-        <input type="number" id="fare" required>
-      </div>
+    <div class="form-group">
+      <label for="fare">Fare per Seat (PKR) *</label>
+      <input type="number" id="fare" required min="100" placeholder="e.g., 5000">
     </div>
 
-    <button type="submit">Publish Trip</button>
+    <button type="submit">
+      <i class="fas fa-plus-circle"></i> Publish Trip
+    </button>
   </form>
 
-  <div id="success-msg">Trip published successfully 🚗</div>
+  <div id="success-msg">
+    <i class="fas fa-check-circle"></i> Trip published successfully! Redirecting...
+  </div>
 </div>
 
 <script src="add-trip.js"></script>
