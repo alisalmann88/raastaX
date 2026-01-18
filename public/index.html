@@ -86,6 +86,35 @@
     }
 
     #user-dropdown button:hover{ background:#f2f2f2; }
+    
+    /* RaastaCare Button Style */
+    .raasta-care-btn {
+      background: #0b3c6d;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      margin-left: 15px;
+    }
+    
+    .raasta-care-btn:hover {
+      background: #1f4fd8;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(31, 79, 216, 0.3);
+    }
+    
+    /* Driver button with icon */
+    #driver-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
   </style>
 </head>
 
@@ -96,17 +125,22 @@
 
   <div class="nav-links">
     <a href="#"><i class="fa-solid fa-headset"></i> Support</a>
-    <a href="driver.html" id="driver-btn">Driver</a>
+    <a href="driver.html" id="driver-btn"><i class="fas fa-id-card"></i> Driver</a>
+    
+    <!-- RaastaCare Button -->
+    <a href="raastacare.html" class="raasta-care-btn">
+      <i class="fas fa-satellite"></i> RaastaCare
+    </a>
 
     <div id="user-container">
       <a href="#" id="auth-btn">Sign In / Sign Up</a>
 
       <div id="user-dropdown">
-        <button id="profile-btn">Profile</button>
-        <button id="trips-btn">My Trips</button>
-        <button id="wallet-btn">raastaX Wallet</button>
-        <button id="settings-btn">Settings</button>
-        <button id="logout">Logout</button>
+        <button id="profile-btn"><i class="fas fa-user"></i> Profile</button>
+        <button id="trips-btn"><i class="fas fa-road"></i> My Trips</button>
+        <button id="wallet-btn"><i class="fas fa-wallet"></i> raastaX Wallet</button>
+        <button id="settings-btn"><i class="fas fa-cog"></i> Settings</button>
+        <button id="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
       </div>
     </div>
   </div>
@@ -120,7 +154,7 @@
     <input type="text" id="login-email" placeholder="Your Name or Email">
     <input type="password" id="login-password" placeholder="Password">
     <button id="login-btn">Login</button>
-    <p>Don’t have an account?
+    <p>Don't have an account?
       <span class="link" id="open-signup">Sign Up</span>
     </p>
   </div>
@@ -142,7 +176,6 @@
 
 <section class="hero">
   <div class="hero-content">
-    <p class="launch">🚀 Launching on <strong>26 January 2026</strong></p>
     <h1>Travel Bookings Made Easy</h1>
     <p class="subtitle">
       Book trusted car rides from Gilgit-Baltistan to Islamabad, Rawalpindi & beyond
@@ -210,8 +243,8 @@
 
 <section class="support">
   <h2>24/7 Customer Support</h2>
-  <p>📞 +92 21-111-172-782</p>
-  <p>📱 +92 304 7772782</p>
+  <p>📞 +92 XX-XXX-XXX-XXX</p>
+  <p>📱 +92 XXX XXXXXXX</p>
 </section>
 
 <footer>© 2026 raastaX. Built for trusted northern travel.</footer>
@@ -226,11 +259,13 @@
   // Check saved user
   const savedUser = localStorage.getItem("passengerName");
   if(savedUser){
-    authBtn.textContent = savedUser; // no icon
-    driverBtn.style.display = "none"; // hide driver button
+    authBtn.textContent = savedUser;
+    authBtn.innerHTML = `<i class="fas fa-user"></i> ${savedUser}`;
+    driverBtn.style.display = "none";
   }
 
-  authBtn.onclick = () => {
+  authBtn.onclick = (e) => {
+    e.preventDefault();
     if(!savedUser) loginModal.style.display = "block";
     else dropdown.style.display = dropdown.style.display==="block" ? "none" : "block";
   };
@@ -278,6 +313,13 @@
     localStorage.setItem("searchData", JSON.stringify({pickup,destination,date,passengers}));
     window.location.href = "search.html";
   };
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#user-container') && dropdown.style.display === 'block') {
+      dropdown.style.display = 'none';
+    }
+  });
 </script>
 
 </body>
