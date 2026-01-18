@@ -6,7 +6,18 @@ const path = require("path");
 const app = express();
 
 // ==================== MIDDLEWARE ====================
-app.use(cors());
+// Fix CORS to allow your frontend
+app.use(cors({
+  origin: [
+    'https://raastax-production.up.railway.app',
+    'http://localhost:3000',
+    'http://localhost:8080'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -59,32 +70,61 @@ app.get("/api/trips", async (req, res) => {
     res.json(formattedTrips);
   } catch (error) {
     console.error("❌ Error fetching trips:", error);
-    res.status(500).json({ error: "Failed to fetch trips" });
+    res.status(500).json({ 
+      success: false,
+      error: "Failed to fetch trips: " + error.message 
+    });
   }
 });
 
-// POST add new trip
+// POST add new trip - UPDATED FOR YOUR FORM
 app.post("/api/trips", async (req, res) => {
   try {
-    const { driverName, carModel, pickup, destination, date, seats, fare } = req.body;
+    console.log("📝 Add trip request received:", req.body);
     
-    if (!driverName || !carModel || !pickup || !destination || !date || !seats || !fare) {
-      return res.status(400).json({ error: "All fields are required" });
+    const { carModel, pickup, destination, date, seats, fare } = req.body;
+    
+    // Since your form doesn't have driverName, use a default
+    const driverName = "Driver"; // You can change this or add field later
+    
+    // Validation
+    if (!carModel || !pickup || !destination || !date || !seats || !fare) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "All fields are required" 
+      });
     }
+    
+    console.log(`🚗 Adding trip: ${pickup} → ${destination} on ${date}`);
     
     const [result] = await db.query(
       "INSERT INTO trips (driverName, carModel, pickup, destination, date, seats, fare, bookedSeats) VALUES (?, ?, ?, ?, ?, ?, ?, '[]')",
-      [driverName, carModel, pickup, destination, date, seats, fare]
+      [driverName, carModel, pickup, destination, date, parseInt(seats), parseFloat(fare)]
     );
+    
+    console.log(`✅ Trip added successfully! ID: ${result.insertId}`);
     
     res.status(201).json({
       success: true,
-      message: "Trip added successfully",
-      tripId: result.insertId
+      message: "Trip added successfully!",
+      tripId: result.insertId,
+      tripDetails: {
+        driverName,
+        carModel,
+        pickup,
+        destination,
+        date,
+        seats: parseInt(seats),
+        fare: parseFloat(fare)
+      }
     });
+    
   } catch (error) {
-    console.error("❌ Error adding trip:", error);
-    res.status(500).json({ error: "Failed to add trip" });
+    console.error("❌ Database error:", error);
+    res.status(500).json({ 
+      success: false, 
+      error: "Database error: " + error.message 
+    });
   }
 });
 
@@ -94,13 +134,19 @@ app.post("/api/book", async (req, res) => {
     const { tripId, seats, passengerName } = req.body;
     
     if (!tripId || !seats || !Array.isArray(seats)) {
-      return res.status(400).json({ error: "Invalid booking data" });
+      return res.status(400).json({ 
+        success: false,
+        error: "Invalid booking data" 
+      });
     }
     
     // Get current trip
     const [trips] = await db.query("SELECT * FROM trips WHERE id = ?", [tripId]);
     if (!trips.length) {
-      return res.status(404).json({ error: "Trip not found" });
+      return res.status(404).json({ 
+        success: false,
+        error: "Trip not found" 
+      });
     }
     
     const trip = trips[0];
@@ -119,6 +165,7 @@ app.post("/api/book", async (req, res) => {
     const conflictingSeats = seats.filter(seat => bookedSeats.includes(seat));
     if (conflictingSeats.length > 0) {
       return res.status(409).json({
+        success: false,
         error: "Seats already booked",
         conflictingSeats: conflictingSeats
       });
@@ -143,13 +190,17 @@ app.post("/api/book", async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Booking error:", error);
-    res.status(500).json({ error: "Booking failed" });
+    res.status(500).json({ 
+      success: false,
+      error: "Booking failed: " + error.message 
+    });
   }
 });
 
 // ==================== TEST ROUTES ====================
 app.get("/api/test", (req, res) => {
   res.json({
+    success: true,
     message: "raastaX API is working! 🚀",
     endpoints: [
       "GET  /api/trips - Get all trips",
@@ -170,9 +221,18 @@ app.get("/api/test-db", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Database connection failed"
+      message: "Database connection failed: " + error.message
     });
   }
+});
+
+// ==================== LOG ALL REQUESTS ====================
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+  if (req.method === 'POST') {
+    console.log('Request Body:', req.body);
+  }
+  next();
 });
 
 // ==================== SPA ROUTES ====================
@@ -186,6 +246,14 @@ app.get("/search", (req, res) => {
 
 app.get("/driver", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/add-trip", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "add-trip.html"));
+});
+
+app.get("/my-trips", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "my-trips.html"));
 });
 
 // Catch-all for SPA
@@ -204,6 +272,9 @@ app.listen(PORT, "0.0.0.0", () => {
   🌐 Domain: raastax-production.up.railway.app
   🏥 Health: /health
   📊 API: /api/trips
+  
+  🛠️  Add Trip Endpoint: POST /api/trips
+  ✅ CORS configured for your frontend
   
   ================================================
   `);
