@@ -78,7 +78,7 @@ app.get("/api/trips", async (req, res) => {
   }
 });
 
-// POST add new trip - THIS WAS MISSING!
+// POST add new trip
 app.post("/api/trips", async (req, res) => {
   try {
     console.log("📝 POST /api/trips - Request body:", req.body);
@@ -176,15 +176,79 @@ app.post("/api/book", async (req, res) => {
   }
 });
 
+// GET driver's trips - NEW ENDPOINT
+app.get("/api/driver/trips", async (req, res) => {
+  try {
+    const { driverName } = req.query;
+    
+    if (!driverName) {
+      return res.status(400).json({ 
+        success: false,
+        error: "Driver name required" 
+      });
+    }
+    
+    console.log(`📊 GET /api/driver/trips for driver: ${driverName}`);
+    
+    const [trips] = await db.query(
+      "SELECT * FROM trips WHERE driverName = ? ORDER BY date DESC",
+      [driverName]
+    );
+    
+    // Format trips with booked seats
+    const formattedTrips = trips.map(trip => {
+      let bookedSeats = [];
+      if (trip.bookedSeats && trip.bookedSeats !== '[]') {
+        try {
+          bookedSeats = JSON.parse(trip.bookedSeats);
+        } catch (e) {
+          bookedSeats = [];
+        }
+      }
+      
+      return {
+        id: trip.id,
+        driverName: trip.driverName,
+        carModel: trip.carModel,
+        pickup: trip.pickup,
+        destination: trip.destination,
+        date: trip.date,
+        seats: trip.seats,
+        fare: trip.fare,
+        bookedSeats: bookedSeats,
+        availableSeats: trip.seats - bookedSeats.length,
+        earnings: trip.fare * bookedSeats.length
+      };
+    });
+    
+    console.log(`✅ Found ${formattedTrips.length} trips for driver ${driverName}`);
+    
+    res.json({
+      success: true,
+      trips: formattedTrips,
+      totalTrips: formattedTrips.length,
+      totalEarnings: formattedTrips.reduce((sum, trip) => sum + trip.earnings, 0)
+    });
+    
+  } catch (error) {
+    console.error("❌ Error fetching driver trips:", error);
+    res.status(500).json({ 
+      success: false,
+      error: "Failed to fetch driver trips" 
+    });
+  }
+});
+
 // Test API
 app.get("/api/test", (req, res) => {
   res.json({
     success: true,
     message: "raastaX API is working! 🚀",
     endpoints: [
-      "GET  /api/trips - Get all trips",
+      "GET  /api/trips - List all trips",
       "POST /api/trips - Add new trip",
       "POST /api/book - Book seats",
+      "GET  /api/driver/trips - Get driver's trips",
       "GET  /health - Health check"
     ]
   });
@@ -246,6 +310,26 @@ app.get("/my-trips", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "my-trips.html"));
 });
 
+app.get("/bookings", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "bookings.html"));
+});
+
+app.get("/earnings", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "earnings.html"));
+});
+
+app.get("/seat-allocation", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "seat-allocation.html"));
+});
+
+app.get("/payment", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "payment.html"));
+});
+
+app.get("/e-ticket", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "e-ticket.html"));
+});
+
 // Catch-all for SPA
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
@@ -262,12 +346,13 @@ app.listen(PORT, "0.0.0.0", () => {
   🌐 Domain: raastax-production.up.railway.app
   📁 Static files: /public
   🏥 Health: /health
-  📊 API: /api/trips (GET & POST)
   
   ✅ API Endpoints Ready:
-     GET  /api/trips    - List all trips
-     POST /api/trips    - Add new trip ✓
-     POST /api/book     - Book seats
+     GET  /api/trips         - List all trips
+     POST /api/trips         - Add new trip
+     POST /api/book          - Book seats
+     GET  /api/driver/trips  - Get driver's trips
+     GET  /api/test          - Test API
   
   ================================================
   `);
