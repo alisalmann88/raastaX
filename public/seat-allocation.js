@@ -4,32 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const continueBtn = document.getElementById("continue-btn");
   const availableSeatsSpan = document.getElementById("available-seats");
 
-  // Floating notification helper
-  function showNotification(msg) {
-    let notif = document.getElementById("notification");
-    if (!notif) {
-      notif = document.createElement("div");
-      notif.id = "notification";
-      notif.style.cssText = `
-        display:none;
-        position:fixed;
-        top:20px;
-        right:20px;
-        background:#ff7a59;
-        color:white;
-        padding:10px 20px;
-        border-radius:6px;
-        z-index:1000;
-        font-weight:bold;
-        box-shadow:0 4px 10px rgba(0,0,0,0.2);
-      `;
-      document.body.appendChild(notif);
-    }
-    notif.textContent = msg;
-    notif.style.display = "block";
-    setTimeout(() => { notif.style.display = "none"; }, 2000);
-  }
-
   // GET BOOKING DATA
   let bookingData = JSON.parse(localStorage.getItem("bookingData"));
   if (!bookingData) {
@@ -41,9 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const passengers = bookingData.passengers;
   const numPassengers = passengers.length;
   let selectedSeats = [];
-
-  // Seat order for gender check
-  const allSeats = ["F1", "B1", "B2", "B3"];
 
   // MARK ALREADY BOOKED SEATS
   if (trip.bookedSeats?.length) {
@@ -63,21 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
     availableSeatsSpan.textContent = available;
   }
 
-  // Gender conflict check (side-by-side)
-  function sideBySideGenderConflict(newSeatId) {
-    const idx = allSeats.indexOf(newSeatId);
-    const newGender = passengers.find(p => !p.seat).gender;
-    const neighbors = [allSeats[idx - 1], allSeats[idx + 1]];
-    for (let n of neighbors) {
-      if (!n) continue;
-      if (selectedSeats.includes(n)) {
-        const otherGender = passengers.find(p => p.seat === n).gender;
-        if (otherGender !== newGender) return true;
-      }
-    }
-    return false;
-  }
-
   // SEAT CLICK HANDLER
   const seats = document.querySelectorAll(".seat");
   seats.forEach(seat => {
@@ -94,12 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (p) p.seat = null;
       } else {
         if (selectedSeats.length >= numPassengers) {
-          showNotification(`You can select only ${numPassengers} seat${numPassengers > 1 ? 's' : ''}`);
-          return;
-        }
-
-        if (sideBySideGenderConflict(seatId)) {
-          showNotification("Cannot place male and female side by side");
+          alert(`You can select only ${numPassengers} seat${numPassengers > 1 ? 's' : ''}`);
           return;
         }
 
@@ -108,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
         seat.classList.add("selected");
         const p = passengers.find(p => !p.seat);
         if (p) p.seat = seatId;
-        seat.dataset.gender = p.gender;
       }
 
       // Update UI
@@ -126,10 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // CONTINUE BUTTON
+  // CONTINUE BUTTON - FIXED API CALL
   continueBtn.addEventListener("click", async () => {
     if (selectedSeats.length !== numPassengers) {
-      showNotification(`Please select ${numPassengers} seat${numPassengers > 1 ? 's' : ''}`);
+      alert(`Please select ${numPassengers} seat${numPassengers > 1 ? 's' : ''}`);
       return;
     }
 
@@ -143,24 +93,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
     localStorage.setItem("bookingData", JSON.stringify(bookingData));
 
-    // Send to backend
+    // ✅ FIXED: Changed from localhost:3000 to /api/book
     try {
-      const res = await fetch("http://localhost:3000/book", {
+      const res = await fetch("/api/book", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
           tripId: trip.id,
           seats: selectedSeats,
-          passengers
+          passengerName: passengers[0]?.name || "Passenger"
         })
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Unknown backend error");
-
-      window.location.href = "payment.html";
+      
+      if (res.ok && data.success) {
+        window.location.href = "payment.html";
+      } else {
+        alert("Error booking seat: " + (data.error || "Unknown error"));
+      }
     } catch(err) {
-      showNotification("Error booking seat: " + err.message);
+      console.error("Booking error:", err);
+      
+      // Try fallback URL
+      try {
+        const fallbackRes = await fetch("https://raastax-production.up.railway.app/api/book", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            tripId: trip.id,
+            seats: selectedSeats,
+            passengerName: passengers[0]?.name || "Passenger"
+          })
+        });
+        
+        const fallbackData = await fallbackRes.json();
+        if (fallbackRes.ok && fallbackData.success) {
+          window.location.href = "payment.html";
+        } else {
+          alert("Fallback error: " + (fallbackData.error || "Unknown error"));
+        }
+      } catch (fallbackErr) {
+        alert("Network error. Please check your connection.");
+      }
     }
   });
 
