@@ -69,8 +69,7 @@ document.getElementById("addTripForm").addEventListener("submit", async e => {
   }
 
   try {
-const res = await fetch("/api/trips", {
-
+const res = await fetch("https://raastax-production.up.railway.app/api/trips", {
   
       method: "POST",
       headers: { "Content-Type": "application/json" },
