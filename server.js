@@ -7,19 +7,17 @@ const app = express();
 
 // ==================== MIDDLEWARE ====================
 // Fix CORS to allow your frontend
+// Replace the cors middleware with this:
 app.use(cors({
-  origin: [
-    'https://raastax-production.up.railway.app',
-    'http://localhost:3000',
-    'http://localhost:8080'
-  ],
+  origin: '*', // Allow ALL origins for now
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+// Handle preflight requests
+app.options('*', cors());
 
 // ==================== HEALTH CHECK ====================
 app.get("/health", (req, res) => {
