@@ -104,6 +104,15 @@ document.getElementById("signup-btn").addEventListener("click", ()=>{
   users.push(newUser);
   localStorage.setItem("drivers", JSON.stringify(users));
   localStorage.setItem("user", JSON.stringify(newUser));
+  // After line: localStorage.setItem("user", JSON.stringify(newUser));
+// Add this:
+localStorage.setItem("driver", JSON.stringify({
+  name: name,
+  phone: phone,
+  cnic: cnic,
+  car: car,
+  seats: seats
+}));
 
   window.location.href="driver.html";
 });
