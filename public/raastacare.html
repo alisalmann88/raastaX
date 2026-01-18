@@ -1,226 +1,983 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- In <head> -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<style>
-  #map {
-    height: 400px;
-    width: 100%;
-    border-radius: 8px;
-    margin-top: 15px;
-  }
-</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RaastaCare – Family Trip Tracking</title>
+  <title>RaastaCare – Live Family Trip Tracking | RaastaX</title>
   
-
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
   <style>
     :root {
       --dark-blue: #0a1f44;
       --white: #ffffff;
       --light-blue: #e6ecf5;
       --accent: #1f4fd8;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --gray: #6c757d;
+      --light-gray: #f8f9fa;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
       background-color: var(--light-blue);
       color: var(--dark-blue);
+      line-height: 1.6;
     }
 
     /* HEADER */
     header {
-      background: var(--dark-blue);
+      background: linear-gradient(135deg, var(--dark-blue) 0%, #152642 100%);
       color: var(--white);
-      padding: 20px 40px;
+      padding: 18px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 4px 12px rgba(10, 31, 68, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
-    header h1 {
-      font-size: 24px;
-      letter-spacing: 1px;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    header span {
+    .logo h1 {
+      font-size: 26px;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+
+    .logo span {
       color: #6fa3ff;
+    }
+
+    .logo-icon {
+      background: var(--accent);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .header-tag {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
     }
 
     /* HERO */
     .hero {
-      background: var(--white);
-      padding: 60px 40px;
+      background: linear-gradient(rgba(10, 31, 68, 0.9), rgba(10, 31, 68, 0.8)), 
+                  url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+      color: var(--white);
+      padding: 80px 30px;
       text-align: center;
+      position: relative;
     }
 
     .hero h2 {
-      font-size: 36px;
-      margin-bottom: 15px;
+      font-size: 42px;
+      margin-bottom: 20px;
+      font-weight: 800;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
 
     .hero p {
-      font-size: 18px;
-      max-width: 700px;
-      margin: auto;
-      color: #444;
+      font-size: 20px;
+      max-width: 800px;
+      margin: 0 auto 30px;
+      opacity: 0.9;
+      font-weight: 300;
     }
 
-    .hero button {
-      margin-top: 30px;
-      padding: 14px 30px;
-      border: none;
-      background: var(--accent);
-      color: var(--white);
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 10px 20px;
+      border-radius: 30px;
       font-size: 16px;
-      border-radius: 6px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* TRACKING SECTION */
+    .track-section {
+      padding: 40px 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .track-container {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .track-header {
+      background: var(--dark-blue);
+      color: white;
+      padding: 25px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .track-header h3 {
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .track-input {
+      padding: 14px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+      min-width: 250px;
+      backdrop-filter: blur(10px);
+    }
+
+    .track-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0d3fd9;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(31, 79, 216, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* MAP CONTAINER */
+    .map-container {
+      padding: 20px;
+      position: relative;
+    }
+
+    #map {
+      height: 450px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      z-index: 1;
+    }
+
+    .map-overlay {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      z-index: 1000;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      width: 280px;
+    }
+
+    /* STATUS PANEL */
+    .status-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 25px;
+      background: var(--light-gray);
+      border-top: 1px solid #eaeaea;
+    }
+
+    .status-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .status-card h4 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      color: var(--dark-blue);
+      font-size: 18px;
+    }
+
+    .status-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .status-value.live {
+      color: var(--success);
+    }
+
+    .status-value.estimated {
+      color: var(--warning);
+    }
+
+    .status-value.offline {
+      color: var(--danger);
+    }
+
+    .status-desc {
+      color: var(--gray);
+      font-size: 14px;
     }
 
     /* FEATURES */
     .features {
-      padding: 60px 40px;
+      padding: 60px 30px;
+      background: var(--white);
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 50px;
+      color: var(--dark-blue);
+    }
+
+    .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .feature-card {
-      background: var(--white);
+      background: var(--light-gray);
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      border-radius: 12px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .feature-icon {
+      width: 70px;
+      height: 70px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+      color: white;
     }
 
     .feature-card h3 {
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       color: var(--dark-blue);
     }
 
     .feature-card p {
-      color: #555;
-      line-height: 1.6;
+      color: var(--gray);
+      line-height: 1.7;
     }
 
-    /* TRACKING MOCK */
-    .tracking {
-      background: var(--dark-blue);
-      color: var(--white);
-      padding: 60px 40px;
+    /* CONTROLS */
+    .controls {
+      padding: 30px;
       text-align: center;
+      background: var(--light-blue);
+      border-top: 1px solid #ddd;
     }
 
-    .tracking h2 {
-      font-size: 32px;
+    .controls h3 {
       margin-bottom: 20px;
-    }
-
-    .tracking-box {
-      margin: auto;
-      max-width: 500px;
-      background: var(--white);
       color: var(--dark-blue);
-      padding: 25px;
-      border-radius: 10px;
     }
 
-    .status {
-      font-weight: bold;
-      margin-top: 10px;
-      color: #d88b1f;
+    .control-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     /* FOOTER */
     footer {
       background: var(--dark-blue);
       color: var(--white);
+      padding: 40px 30px;
       text-align: center;
-      padding: 20px;
-      font-size: 14px;
     }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      text-align: left;
+    }
+
+    .footer-section h4 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #6fa3ff;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-section ul li a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-section ul li a:hover {
+      color: white;
+    }
+
+    .copyright {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero h2 {
+        font-size: 32px;
+      }
+      
+      .hero p {
+        font-size: 18px;
+      }
+      
+      .track-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .input-group {
+        flex-direction: column;
+      }
+      
+      .track-input {
+        min-width: auto;
+        width: 100%;
+      }
+      
+      #map {
+        height: 350px;
+      }
+      
+      .map-overlay {
+        position: static;
+        width: auto;
+        margin-bottom: 20px;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .hero {
+        padding: 50px 20px;
+      }
+      
+      .track-section {
+        padding: 20px;
+      }
+    }
+
+    /* ANIMATIONS */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    .signal-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .signal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .signal-good { background: var(--success); }
+    .signal-weak { background: var(--warning); }
+    .signal-lost { background: var(--danger); }
   </style>
 </head>
 
 <body>
-
+  <!-- HEADER -->
   <header>
-    <h1>Raasta<span>X</span></h1>
-    <p>RaastaCare</p>
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-route"></i>
+      </div>
+      <h1>Raasta<span>X</span></h1>
+    </div>
+    <div class="header-tag">
+      <i class="fas fa-shield-alt"></i> RaastaCare Family Tracking
+    </div>
   </header>
 
+  <!-- HERO SECTION -->
   <section class="hero">
-
-    <section class="track-input">
-  <h3>Track a Trip</h3>
-  <input type="text" id="bookingId" placeholder="Booking ID or Vehicle Number" />
-  <button onclick="lookupTrip()">Track Now</button>
-</section>
+    <div class="hero-badge">
+      <i class="fas fa-star"></i> #1 Travel Tracker for Gilgit Routes
+    </div>
     <h2>Travel Without Worry</h2>
     <p>
       RaastaCare keeps your family informed during long journeys — even in
-      low-signal areas like Dassu and Patan.
+      low-signal areas like Dassu, Babusar Top, and Chilas.
     </p>
-    <button>Enable RaastaCare</button>
   </section>
 
+  <!-- TRACKING SECTION -->
+  <section class="track-section">
+    <div class="track-container">
+      <div class="track-header">
+        <h3><i class="fas fa-map-marker-alt"></i> Track Your Trip</h3>
+        <div class="input-group">
+          <input type="text" class="track-input" id="bookingId" 
+                 placeholder="Enter Booking ID or Vehicle Number">
+          <input type="text" class="track-input" id="pinCode" 
+                 placeholder="PIN Code (Optional)" style="width: 150px;">
+          <button class="btn btn-primary" onclick="lookupTrip()">
+            <i class="fas fa-search"></i> Track Now
+          </button>
+        </div>
+      </div>
+
+      <div class="map-container">
+        <!-- Map Overlay -->
+        <div class="map-overlay">
+          <h4 style="margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-satellite-dish"></i> Signal Status
+          </h4>
+          <div id="signalDisplay" style="margin-bottom: 15px;">
+            <div class="signal-indicator">
+              <span class="signal-dot signal-lost"></span>
+              <span>No Active Trip</span>
+            </div>
+          </div>
+          <div style="font-size: 14px; color: #666;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span>📍 Live GPS</span>
+              <div class="signal-dot signal-good"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span>🟡 Estimated</span>
+              <div class="signal-dot signal-weak"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>🔴 No Signal</span>
+              <div class="signal-dot signal-lost"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div id="map"></div>
+      </div>
+
+      <!-- STATUS PANEL -->
+      <div class="status-panel">
+        <div class="status-card">
+          <h4><i class="fas fa-car"></i> Vehicle Status</h4>
+          <div class="status-value" id="vehicleStatus">Not Tracking</div>
+          <div class="status-desc" id="vehicleDetail">Enter tracking details to begin</div>
+        </div>
+        
+        <div class="status-card">
+          <h4><i class="fas fa-road"></i> Current Location</h4>
+          <div class="status-value" id="locationText">--</div>
+          <div class="status-desc" id="locationDetail">Last known position</div>
+        </div>
+        
+        <div class="status-card">
+          <h4><i class="fas fa-clock"></i> Next Checkpoint</h4>
+          <div class="status-value" id="checkpointText">--</div>
+          <div class="status-desc" id="checkpointDetail">Estimated arrival</div>
+        </div>
+        
+        <div class="status-card">
+          <h4><i class="fas fa-flag-checkered"></i> Estimated Arrival</h4>
+          <div class="status-value" id="etaText">--</div>
+          <div class="status-desc" id="etaDetail">Based on current progress</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
   <section class="features">
-    <div class="feature-card">
-      <h3>📍 Live + Estimated Tracking</h3>
-      <p>
-        Real GPS when signal is available. Smart estimation when network drops.
-      </p>
-    </div>
-
-    <div class="feature-card">
-      <h3>👨‍👩‍👧 Family Tracking Link</h3>
-      <p>
-        Share a simple link with family — no app required.
-      </p>
-    </div>
-
-    <div class="feature-card">
-      <h3>🚗 Stop Detection</h3>
-      <p>
-        Automatically detects stops for breaks or meals.
-      </p>
-    </div>
-
-    <div class="feature-card">
-      <h3>🛡 Verified Drivers</h3>
-      <p>
-        CNIC and vehicle-verified drivers only for inter-city travel.
-      </p>
+    <h2>Why Choose RaastaCare?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-satellite"></i>
+        </div>
+        <h3>Signal-Loss Tracking</h3>
+        <p>Smart estimation when network drops in Babusar, Chilas, and other dead zones.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-bell"></i>
+        </div>
+        <h3>Auto Break Detection</h3>
+        <p>Detects stops at Dassu (lunch), Chilas (rest), and other common points.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-link"></i>
+        </div>
+        <h3>Family Sharing</h3>
+        <p>Share secure tracking link via WhatsApp, SMS, or email with family.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3>Driver Verification</h3>
+        <p>CNIC and vehicle-verified drivers only for inter-city travel.</p>
+      </div>
     </div>
   </section>
 
-  <section class="tracking">
-    <h2>Live Trip Status</h2>
-
-
-
-    
-    <div class="tracking-box">
-  <p><strong>Route:</strong> <span id="routeText">Gilgit → Islamabad</span></p>
-  <p><strong>Status:</strong> <span id="statusText">Waiting for trip data...</span></p>
-  <p><strong>Last Known Location:</strong> <span id="locationText">--</span></p>
-  <p><strong>Signal:</strong> <span id="signalText">--</span></p>
-  <div id="map" style="height: 300px; width: 100%; background: #eee; margin-top: 20px;"></div>
-</div>
+  <!-- CONTROLS -->
+  <section class="controls">
+    <h3>Simulation Controls (For Testing)</h3>
+    <div class="control-buttons">
+      <button class="btn btn-primary" onclick="startDemoTrip()">
+        <i class="fas fa-play"></i> Start Demo Trip
+      </button>
+      <button class="btn btn-secondary" onclick="simulateSignalLoss()">
+        <i class="fas fa-wifi-slash"></i> Simulate Signal Loss
+      </button>
+      <button class="btn btn-secondary" onclick="simulateBreak()">
+        <i class="fas fa-utensils"></i> Simulate Lunch Break
+      </button>
+      <button class="btn btn-secondary" onclick="resetTracking()">
+        <i class="fas fa-redo"></i> Reset
+      </button>
+    </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
-    © 2026 RaastaX — RaastaCare for Safety & Trust
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>RaastaCare</h4>
+        <p>Advanced family tracking for Gilgit ⇄ Islamabad routes. Never lose sight of your loved ones, even in the mountains.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/booking.html">Book a Trip</a></li>
+          <li><a href="/my-trips.html">My Trips</a></li>
+          <li><a href="/driver.html">Driver Portal</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <ul>
+          <li><i class="fas fa-phone"></i> +92 300 1234567</li>
+          <li><i class="fas fa-envelope"></i> care@raastax.com</li>
+          <li><i class="fas fa-map-marker-alt"></i> Gilgit, Pakistan</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      © 2026 RaastaX – RaastaCare for Safety & Trust. Made with <i class="fas fa-heart" style="color: #ff4757;"></i> for Gilgit travelers.
+    </div>
   </footer>
 
-</body>
-</html>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Main JS -->
+  <script>
+    // raastacare.js - Complete Implementation
+    
+    // ========== GLOBAL VARIABLES ==========
+    let map;
+    let vehicleMarker;
+    let routeLine;
+    let checkpointMarkers = [];
+    let simulationInterval;
+    let currentTrip = null;
+    let isDemoActive = false;
+    
+    // Route coordinates (Gilgit → Islamabad via KKH+Babusar)
+    const routeCheckpoints = [
+      { name: "Gilgit", lat: 35.9208, lng: 74.3144, hasSignal: true, stopType: "start" },
+      { name: "Jaglot", lat: 35.7680, lng: 74.2776, hasSignal: false, stopType: "checkpoint" },
+      { name: "Chilas", lat: 35.4182, lng: 74.0981, hasSignal: true, stopType: "rest" },
+      { name: "Dassu (Lunch Stop)", lat: 35.2600, lng: 73.9800, hasSignal: true, stopType: "lunch" },
+      { name: "Babusar Base", lat: 35.0000, lng: 73.8000, hasSignal: false, stopType: "checkpoint" },
+      { name: "Babusar Top", lat: 34.8500, lng: 73.6500, hasSignal: false, stopType: "checkpoint" },
+      { name: "Naran", lat: 34.9064, lng: 73.6480, hasSignal: true, stopType: "rest" },
+      { name: "Islamabad", lat: 33.6844, lng: 73.0479, hasSignal: true, stopType: "destination" }
+    ];
+    
+    // Segment data for estimation
+    const routeSegments = [
+      { from: 0, to: 1, distance: 45, avgSpeed: 50, avgTime: 54 },
+      { from: 1, to: 2, distance: 90, avgSpeed: 40, avgTime: 135 },
+      { from: 2, to: 3, distance: 20, avgSpeed: 60, avgTime: 20 },
+      { from: 3, to: 4, distance: 60, avgSpeed: 30, avgTime: 120 },
+      { from: 4, to: 5, distance: 25, avgSpeed: 20, avgTime: 75 },
+      { from: 5, to: 6, distance: 40, avgSpeed: 40, avgTime: 60 },
+      { from: 6, to: 7, distance: 250, avgSpeed: 70, avgTime: 214 }
+    ];
+    
+    // ========== MAP INITIALIZATION ==========
+    function initMap() {
+      // Initialize map centered on Gilgit
+      map = L.map('map').setView([35.9208, 74.3144], 9);
+      
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+      }).addTo(map);
+      
+      // Draw route line
+      const routeCoords = routeCheckpoints.map(cp => [cp.lat, cp.lng]);
+      routeLine = L.polyline(routeCoords, {
+        color: '#1f4fd8',
+        weight: 4,
+        opacity: 0.7,
+        dashArray: '10, 5'
+      }).addTo(map);
+      
+      // Add checkpoint markers with custom icons
+      routeCheckpoints.forEach((checkpoint, index) => {
+        let iconColor;
+        switch(checkpoint.stopType) {
+          case 'start': iconColor = '#28a745'; break;
+          case 'destination': iconColor = '#dc3545'; break;
+          case 'lunch': iconColor = '#ffc107'; break;
+          default: iconColor = '#6c757d';
+        }
+        
+        const icon = L.divIcon({
+          html: `<div style="background: ${iconColor}; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">${index+1}</div>`,
+          className: 'checkpoint-marker',
+          iconSize: [24, 24],
+          iconAnchor: [12, 12]
+        });
+        
+        const marker = L.marker([checkpoint.lat, checkpoint.lng], { icon })
+          .addTo(map)
+          .bindPopup(`
+            <b>${checkpoint.name}</b><br>
+            ${checkpoint.stopType === 'start' ? '🚗 Start Point' : 
+              checkpoint.stopType === 'destination' ? '🏁 Destination' :
+              checkpoint.stopType === 'lunch' ? '🍽️ Lunch Stop' : '📍 Checkpoint'}<br>
+            Signal: ${checkpoint.hasSignal ? '🟢 Good' : '🔴 Weak/None'}
+          `);
+        
+        checkpointMarkers.push(marker);
+      });
+      
+      // Fit map to show entire route
+      map.fitBounds(routeLine.getBounds());
+      
+      console.log("✅ Leaflet map initialized successfully!");
+      updateStatus("Map ready. Enter tracking details to begin.");
+    }
+    
+    // ========== TRACKING FUNCTIONS ==========
+    function lookupTrip() {
+      const bookingId = document.getElementById('bookingId').value.trim();
+      const pinCode = document.getElementById('pinCode').value.trim();
+      
+      if (!bookingId) {
+        alert("Please enter a Booking ID or Vehicle Number");
+        return;
+      }
+      
+      // In production, this would fetch from backend
+      // For demo, we'll simulate
+      updateStatus(`Looking up trip: ${bookingId}...`);
+      
+      // Simulate API call
+      setTimeout(() => {
+        startDemoTrip();
+        updateStatus(`Trip found! Tracking vehicle ${bookingId}`);
+      }, 1000);
+    }
+    
+    function startDemoTrip() {
+      if (isDemoActive) return;
+      
+      isDemoActive = true;
+      currentTrip = {
+        id: 'DEMO-2024-GIL-ISB',
+        vehicle: 'GIL-1234',
+        driver: 'Ali Khan',
+        startTime: new Date(),
+        currentSegment: 0,
+        position: { ...routeCheckpoints[0] },
+        isOnline: true,
+        passengers: 12
+      };
+      
+      // Update UI
+      document.getElementById('vehicleStatus').innerHTML = '<span class="status-value live">ON ROUTE</span>';
+      document.getElementById('vehicleDetail').textContent = `Vehicle ${currentTrip.vehicle} with ${currentTrip.passengers} passengers`;
+      document.getElementById('locationText').textContent = routeCheckpoints[0].name;
+      document.getElementById('locationDetail').textContent = "Live GPS location";
+      document.getElementById('checkpointText').textContent = routeCheckpoints[1].name;
+      document.getElementById('checkpointDetail').textContent = "Next: Jaglot";
+      document.getElementById('etaText').textContent = "6h 45m";
+      document.getElementById('etaDetail').textContent = "To Islamabad";
+      
+      // Update signal display
+      updateSignalDisplay(true);
+      
+      // Create vehicle marker
+      updateVehicleOnMap(currentTrip.position.lat, currentTrip.position.lng, false);
+      
+      // Start simulation
+      simulationInterval = setInterval(simulateTripProgress, 3000);
+      
+      // Show notification
+      showNotification("Trip tracking started! Family has been notified.");
+    }
+    
+    function simulateTripProgress() {
+      if (!currentTrip) return;
+      
+      // Move to next checkpoint after some time
+      if (currentTrip.currentSegment < routeCheckpoints.length - 1) {
+        const nextSegment = routeSegments[currentTrip.currentSegment];
+        const progress = Math.min(1, (Date.now() - currentTrip.startTime) / (nextSegment.avgTime * 60000));
+        
+        if (progress >= 0.95) {
+          // Move to next segment
+          currentTrip.currentSegment++;
+          if (currentTrip.currentSegment < routeCheckpoints.length) {
+            currentTrip.position = { ...routeCheckpoints[currentTrip.currentSegment] };
+            
+            // Check if this is a special stop
+            const checkpoint = routeCheckpoints[currentTrip.currentSegment];
+            currentTrip.isOnline = checkpoint.hasSignal;
+            
+            // Special handling for Dassu (lunch)
+            if (checkpoint.stopType === 'lunch') {
+              showNotification(`🚗 Lunch break at ${checkpoint.name}! Estimated 30-45 minute stop.`);
+              document.getElementById('vehicleStatus').innerHTML = '<span class="status-value estimated">LUNCH BREAK</span>';
+              document.getElementById('vehicleDetail').textContent = `Stopped at ${checkpoint.name} for meal`;
+              
+              // Simulate break time
+              setTimeout(() => {
+                if (currentTrip) {
+                  showNotification(`🚗 Resuming journey from ${checkpoint.name}`);
+                  document.getElementById('vehicleStatus').innerHTML = '<span class="status-value live">ON ROUTE</span>';
+                }
+              }, 10000); // 10 seconds for demo
+            }
+            
+            // Update UI
+            document.getElementById('locationText').textContent = checkpoint.name;
+            document.getElementById('checkpointText').textContent = 
+              currentTrip.currentSegment < routeCheckpoints.length - 1 ? 
+              routeCheckpoints[currentTrip.currentSegment + 1].name : "Destination Reached";
+            
+            // Calculate ETA
+            const remainingSegments = routeSegments.slice(currentTrip.currentSegment);
+            const totalRemainingTime = remainingSegments.reduce((sum, seg) => sum + seg.avgTime, 0);
+            const etaMinutes = Math.round(totalRemainingTime * (1 - progress));
+            const etaHours = Math.floor(etaMinutes / 60);
+            const etaMins = etaMinutes % 60;
+            document.getElementById('etaText').textContent = `${etaHours}h ${etaMins}m`;
+            
+            // Update map
+            updateVehicleOnMap(
+              currentTrip.position.lat, 
+              currentTrip.position.lng, 
+              !currentTrip.isOnline
+            );
+            
+            // Update signal display
+            updateSignalDisplay(currentTrip.isOnline);
+            
+            // If signal lost, show warning
+            if (!currentTrip.isOnline) {
+              showNotification(`⚠️ Signal lost near ${checkpoint.name}. Using estimated tracking.`);
+            }
+          }
+        } else {
+          // Interpolate position between checkpoints
+          const from = routeCheckpoints[currentTrip.currentSegment];
+          const to = routeCheckpoints[currentTrip.currentSegment + 1];
+          const lat = from.lat + (to.lat - from.lat) * progress;
+          const lng = from.lng + (to.lng - from.lng) * progress;
+          
+          // Update position
+          currentTrip.position.lat = lat;
+          currentTrip.position.lng = lng;
+          
+          // Update map
+          updateVehicleOnMap(lat, lng, !currentTrip.isOnline);
+        }
+        
+        // Update location detail
+        document.getElementById('locationDetail').textContent = 
+          currentTrip.isOnline ? "Live GPS location" : "Estimated (Low Signal)";
+      } else {
+        // Trip completed
+        endDemoTrip();
+      }
+    }
+    
+    function updateVehicleOnMap(lat, lng, isEstimated = false) {
+      const latLng = [lat, lng];
+      
+      if (!vehicleMarker) {
+        // Create custom vehicle icon
+        const vehicleIcon = L.divIcon({
+          html: `
+            <div style="background: ${isEstimated ? '#ffc107' : '#1f4fd8'}; 
+                        width: 40px; height: 40px; border-radius: 50%; 
+                        display: flex; align-items: center; justify-content: center;
+                        border: 3px solid white; box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+                        animation: ${isEstimated ? 'pulse 2s infinite' : 'none'};">
+              <i class="fas fa-bus" style="color: white; font-size: 18px;"></i>
+            </div>
+          `,
+          className: 'vehicle-marker',
+          iconSize: [40, 40],
+          iconAnchor: [20, 20]
+        });
+        
+        vehicleMarker = L.marker(latLng, { icon: vehicleIcon })
+          .addTo(map)
+          .bindPopup(`
+            <b>${isEstimated ? '🚨 Estimated Location' : '📍 Live Location'}</b><br>
+            Vehicle: ${currentTrip?.vehicle || 'Unknown'}<br>
+            Time: ${new Date().toLocaleTimeString()}<br>
+            Status: ${isEstimated ? 'Signal Lost - Estimating' : 'Good Signal'}
+          `);
+      } else {
+        vehicleMarker.setLatLng(latLng);
+        
+        // Update icon
+        const newIcon = L.divIcon({
+          html: `
+            <div style="background: ${isEstimated ? '#ffc107' : '#1f4fd8'}; 
+                        width: 40px; height: 40px; border-radius: 50%; 
+                        display: flex; align-items: center; justify-content: center;
+                        border: 3px solid white; box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+                        animation: ${isEstimated ? 'pulse 2s infinite' : 'none'};">
+              <i class="fas fa-bus" style="color: white; font-size: 18px;"></i>
+            </div>
+          `,
+          className: 'vehicle-marker',
+          iconSize: [40, 40],
+          iconAnchor: [20, 20]
+        });
+        
+        vehicleMarker
