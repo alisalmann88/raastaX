@@ -13,21 +13,44 @@ const searchData = JSON.parse(localStorage.getItem("searchData")) || {};
 let selectedDate = searchData.date || new Date().toISOString().split("T")[0];
 let startDate = new Date(selectedDate);
 
-// ================== FETCH ==================
+// ================== FETCH - FIXED ==================
 async function getTrips() {
   try {
-    const res = await fetch("http://localhost:3000/trips");
+    // ✅ FIXED: Changed from localhost:3000 to /api/trips
+    const res = await fetch("/api/trips");
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
     const trips = await res.json();
+    console.log(`✅ Fetched ${trips.length} trips from API`);
 
+    // Process dates
     trips.forEach(t => {
       const d = new Date(t.date);
       d.setHours(d.getHours() + 5); // PKT safe
       t.dateOnly = d.toISOString().split("T")[0];
+      t.formattedDate = `${d.getDate()} ${months[d.getMonth()]}`;
     });
 
     return trips;
   } catch (err) {
-    console.error(err);
+    console.error("❌ Error fetching trips:", err);
+    
+    // Fallback: Try with full URL
+    try {
+      console.log("🔄 Trying fallback URL...");
+      const fallbackRes = await fetch("https://raastax-production.up.railway.app/api/trips");
+      if (fallbackRes.ok) {
+        const fallbackTrips = await fallbackRes.json();
+        console.log(`✅ Fallback fetched ${fallbackTrips.length} trips`);
+        return fallbackTrips;
+      }
+    } catch (fallbackErr) {
+      console.error("Fallback also failed:", fallbackErr);
+    }
+    
     return [];
   }
 }
@@ -74,7 +97,7 @@ function renderDates() {
   }
 }
 
-// ================== ARROWS (FIXED) ==================
+// ================== ARROWS ==================
 function nextWeek() {
   startDate.setDate(startDate.getDate() + 7);
   selectedDate = startDate.toISOString().split("T")[0];
@@ -89,13 +112,24 @@ function prevWeek() {
   filterAndShow();
 }
 
-// ================== FILTER LOGIC ==================
+// ================== FILTER LOGIC - IMPROVED ==================
 function filterAndShow() {
-  let trips = allTrips.filter(t =>
-    t.dateOnly === selectedDate &&
-    (!searchData.pickup || t.pickup === searchData.pickup) &&
-    (!searchData.destination || t.destination === searchData.destination)
-  );
+  let trips = allTrips.filter(t => {
+    // Check date
+    if (t.dateOnly !== selectedDate) return false;
+    
+    // Check pickup (case insensitive, partial match)
+    if (searchData.pickup && !t.pickup.toLowerCase().includes(searchData.pickup.toLowerCase())) {
+      return false;
+    }
+    
+    // Check destination
+    if (searchData.destination && !t.destination.toLowerCase().includes(searchData.destination.toLowerCase())) {
+      return false;
+    }
+    
+    return true;
+  });
 
   if (activeFilter === "cheapest") {
     trips.sort((a, b) => a.fare - b.fare);
@@ -104,36 +138,71 @@ function filterAndShow() {
   showTrips(trips);
 }
 
-// ================== RENDER ==================
+// ================== RENDER - IMPROVED ==================
 function showTrips(trips) {
   searchResults.innerHTML = "";
 
   if (!trips.length) {
     searchResults.innerHTML = `
-      <div class="no-trips" style="color:var(--blue); font-weight:700;">
-        No trips available for this date
+      <div class="no-trips">
+        <i class="fas fa-car" style="font-size: 3em; color: var(--blue); margin-bottom: 10px;"></i>
+        <h3>No trips found</h3>
+        <p>No trips available for ${selectedDate}</p>
+        ${searchData.pickup ? `<p>From: ${searchData.pickup}</p>` : ''}
+        ${searchData.destination ? `<p>To: ${searchData.destination}</p>` : ''}
+        <p style="margin-top: 20px;">Try searching for different dates or routes</p>
       </div>`;
     return;
   }
 
   trips.forEach(trip => {
-    const d = new Date(trip.date);
-    d.setHours(d.getHours() + 5);
-    const dateStr = `${d.getDate()}-${months[d.getMonth()]}`;
-
     const div = document.createElement("div");
     div.className = "trip-card";
     div.innerHTML = `
-      <h3>${trip.carModel}</h3>
-      <p>${trip.pickup} → ${trip.destination}</p>
-      <p><strong>${dateStr}</strong></p>
-      <p>Seats: ${trip.seats}</p>
-      <p style="color:var(--accent); font-size:13px;">PKR ${trip.fare}</p>
-      <button class="book-btn">Book</button>
+      <div class="trip-header">
+        <h3>${trip.carModel}</h3>
+        <span class="driver">👤 ${trip.driverName}</span>
+      </div>
+      
+      <div class="trip-route">
+        <span class="from">${trip.pickup}</span>
+        <i class="fas fa-arrow-right"></i>
+        <span class="to">${trip.destination}</span>
+      </div>
+      
+      <div class="trip-details">
+        <div class="detail">
+          <i class="far fa-calendar"></i>
+          <span>${trip.formattedDate || 'Date not set'}</span>
+        </div>
+        <div class="detail">
+          <i class="fas fa-users"></i>
+          <span>${trip.availableSeats || trip.seats} seats available</span>
+        </div>
+        <div class="detail">
+          <i class="fas fa-tag"></i>
+          <span class="fare">PKR ${trip.fare}</span>
+        </div>
+      </div>
+      
+      <button class="book-btn">
+        <i class="fas fa-ticket-alt"></i> Book Now
+      </button>
     `;
 
     div.querySelector(".book-btn").onclick = () => {
-      localStorage.setItem("bookingData", JSON.stringify({ trip }));
+      localStorage.setItem("bookingData", JSON.stringify({ 
+        trip: {
+          id: trip.id,
+          driverName: trip.driverName,
+          carModel: trip.carModel,
+          pickup: trip.pickup,
+          destination: trip.destination,
+          date: trip.date,
+          seats: trip.availableSeats || trip.seats,
+          fare: trip.fare
+        }
+      }));
       window.location.href = "booking.html";
     };
 
@@ -151,9 +220,42 @@ filterBtns.forEach(btn => {
   };
 });
 
+// ================== DEBUG ==================
+function debugTrips() {
+  console.log("=== DEBUG TRIPS ===");
+  console.log("All trips:", allTrips);
+  console.log("Search data:", searchData);
+  console.log("Selected date:", selectedDate);
+  console.log("Active filter:", activeFilter);
+}
+
 // ================== INIT ==================
 (async function init() {
+  console.log("🔄 Initializing search page...");
+  console.log("Search data from localStorage:", searchData);
+  
   allTrips = await getTrips();
+  console.log(`✅ Loaded ${allTrips.length} trips`);
+  
+  // If no trips, show message
+  if (allTrips.length === 0) {
+    console.warn("⚠️ No trips loaded from API");
+    searchResults.innerHTML = `
+      <div class="no-trips">
+        <h3>No trips in database</h3>
+        <p>Add some trips from the Driver panel first!</p>
+        <button onclick="window.location.href='add-trip.html'" style="margin-top: 20px; padding: 10px 20px; background: var(--blue); color: white; border: none; border-radius: 5px;">
+          Add Trip
+        </button>
+      </div>
+    `;
+  }
+  
   renderDates();
   filterAndShow();
+  debugTrips();
 })();
+
+// Add to global scope for debugging
+window.debugTrips = debugTrips;
+window.getAllTrips = () => allTrips;
