@@ -33,7 +33,7 @@ brandSelect.addEventListener("change", () => {
     carModels[brandSelect.value].forEach(m => {
       modelSelect.innerHTML += `<option value="${m}">${m}</option>`;
     });
-    modelSelect.value = carModels[brandSelect.value][0]; // default first model
+    modelSelect.value = carModels[brandSelect.value][0];
   }
 });
 
@@ -44,18 +44,18 @@ pickupSelect.value = locations[0];
 destinationSelect.value = locations[1];
 seatsInput.value = 1;
 fareInput.value = 100;
-dateInput.valueAsDate = new Date(); // today
+dateInput.valueAsDate = new Date();
 
 // ===== SUBMIT FORM =====
 document.getElementById("addTripForm").addEventListener("submit", async e => {
   e.preventDefault();
 
   const tripData = {
-    driverName: "Driver",
+    driverName: "Driver", // You might want to make this an input field
     carModel: modelSelect.value,
     pickup: pickupSelect.value,
     destination: destinationSelect.value,
-    date: dateInput.value,   // YYYY-MM-DD
+    date: dateInput.value,
     seats: parseInt(seatsInput.value),
     fare: parseInt(fareInput.value)
   };
@@ -69,8 +69,8 @@ document.getElementById("addTripForm").addEventListener("submit", async e => {
   }
 
   try {
-const res = await fetch("https://raastax-production.up.railway.app/api/trips", {
-  
+    // ✅ FIXED: Use correct API endpoint
+    const res = await fetch("/api/trips", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tripData)
@@ -78,17 +78,17 @@ const res = await fetch("https://raastax-production.up.railway.app/api/trips", {
 
     const data = await res.json();
 
-    if (res.ok && data.tripId) {
+    if (res.ok && data.success) {
       successMsg.style.display = "block";
       setTimeout(() => {
         successMsg.style.display = "none";
         window.location.href = "my-trips.html";
       }, 1500);
     } else {
-      alert("Failed to add trip: " + (data.message || "Unknown error"));
+      alert("Failed to add trip: " + (data.error || "Unknown error"));
     }
   } catch (err) {
-    console.error(err);
-    alert("Server error: " + err.message);
+    console.error("Fetch error:", err);
+    alert("Server error: Failed to connect. Check console for details.");
   }
 });
