@@ -23,6 +23,36 @@ document.addEventListener('DOMContentLoaded', function() {
   const seatsSelect = document.getElementById("seats");
   const fareInput = document.getElementById("fare");
 
+  // Get logged-in user
+  function getLoggedInDriver() {
+    try {
+      const user = JSON.parse(localStorage.getItem("user")) || {};
+      console.log("Current user from localStorage:", user);
+      
+      // If user is logged in as driver
+      if (user.role === "driver" && (user.name || user.phone)) {
+        return user.name || user.phone;
+      }
+      
+      // If driver is logged in via driver-auth
+      const driver = JSON.parse(localStorage.getItem("driver")) || {};
+      if (driver.name || driver.phone) {
+        return driver.name || driver.phone;
+      }
+      
+      // Check if there's any user info
+      const passenger = JSON.parse(localStorage.getItem("passengerName"));
+      if (passenger) {
+        return passenger;
+      }
+      
+      return "Driver"; // Default fallback
+    } catch (error) {
+      console.error("Error getting user:", error);
+      return "Driver";
+    }
+  }
+
   // Initialize dropdowns
   function initializeForm() {
     console.log("🔄 Initializing form elements...");
@@ -41,8 +71,17 @@ document.addEventListener('DOMContentLoaded', function() {
       destinationSelect.innerHTML += `<option value="${loc}">${loc}</option>`;
     });
     
+    // Set driver name from logged-in user
+    const loggedInDriver = getLoggedInDriver();
+    console.log("Setting driver name to:", loggedInDriver);
+    
+    if (driverNameInput) {
+      driverNameInput.value = loggedInDriver;
+      driverNameInput.readOnly = true; // Make it read-only since we auto-fill it
+      driverNameInput.title = "Driver name is automatically set from your login";
+    }
+    
     // Set default values
-    if (driverNameInput) driverNameInput.value = "Test Driver";
     brandSelect.value = "Toyota";
     updateCarModels();
     pickupSelect.value = "Islamabad";
@@ -56,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     dateInput.valueAsDate = tomorrow;
     dateInput.min = new Date().toISOString().split('T')[0];
     
-    console.log("✅ Form initialized");
+    console.log("✅ Form initialized with driver:", loggedInDriver);
   }
 
   // Update car models when brand changes
@@ -72,17 +111,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Event listeners
-  brandSelect.addEventListener('change', updateCarModels);
-
   // Form submission
   document.getElementById("addTripForm").addEventListener("submit", async function(e) {
     e.preventDefault();
     console.log("📤 Form submission started...");
     
+    // Get driver name from localStorage (not from input field)
+    const loggedInDriver = getLoggedInDriver();
+    
     // Collect form data
     const formData = {
-      driverName: driverNameInput.value.trim(),
+      driverName: loggedInDriver, // ✅ Use logged-in driver name
       carModel: modelSelect.value,
       pickup: pickupSelect.value,
       destination: destinationSelect.value,
@@ -91,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fare: parseInt(fareInput.value)
     };
     
-    console.log("📝 Form data:", formData);
+    console.log("📝 Form data (with auto driver name):", formData);
     
     // Validation
     let isValid = true;
@@ -123,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     try {
       console.log("🌐 Sending request to /api/trips...");
+      console.log("Driver name being sent:", formData.driverName);
       
       const response = await fetch('/api/trips', {
         method: 'POST',
@@ -139,11 +179,20 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log("📦 Response data:", result);
       
       if (response.ok && result.success) {
-        alert(`✅ Trip added successfully!\nTrip ID: ${result.tripId}\n\nYou will be redirected to My Trips.`);
+        alert(`✅ Trip added successfully!\nDriver: ${formData.driverName}\nTrip ID: ${result.tripId}\n\nYou will be redirected to My Trips.`);
         
-        // Clear form
-        e.target.reset();
-        initializeForm();
+        // Clear form but keep driver name
+        brandSelect.value = "";
+        modelSelect.innerHTML = '<option value="">Select Model</option>';
+        pickupSelect.value = "";
+        destinationSelect.value = "";
+        seatsSelect.value = "";
+        fareInput.value = "";
+        
+        // Set date to tomorrow again
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.valueAsDate = tomorrow;
         
         // Redirect after 2 seconds
         setTimeout(() => {
@@ -169,7 +218,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         const result2 = await response2.json();
         console.log("Full URL response:", result2);
-        alert("Fallback worked: " + JSON.stringify(result2));
+        if (result2.success) {
+          alert("✅ Trip added via fallback URL!");
+        } else {
+          alert("Fallback error: " + JSON.stringify(result2));
+        }
       } catch (error2) {
         console.error("Fallback also failed:", error2);
       }
@@ -181,7 +234,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  // Brand change event
+  brandSelect.addEventListener('change', updateCarModels);
+
   // Initialize the form
   initializeForm();
   console.log("🎉 add-trip.js setup complete");
+  
+  // Debug: log all localStorage items
+  console.log("=== LOCALSTORAGE DEBUG ===");
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    try {
+      const value = JSON.parse(localStorage.getItem(key));
+      console.log(key + ":", value);
+    } catch {
+      console.log(key + ":", localStorage.getItem(key));
+    }
+  }
 });
