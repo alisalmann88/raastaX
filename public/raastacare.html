@@ -146,6 +146,12 @@
   </header>
 
   <section class="hero">
+
+    <section class="track-input">
+  <h3>Track a Trip</h3>
+  <input type="text" id="bookingId" placeholder="Booking ID or Vehicle Number" />
+  <button onclick="lookupTrip()">Track Now</button>
+</section>
     <h2>Travel Without Worry</h2>
     <p>
       RaastaCare keeps your family informed during long journeys — even in
@@ -187,11 +193,16 @@
   <section class="tracking">
     <h2>Live Trip Status</h2>
 
+
+
+    
     <div class="tracking-box">
-      <p><strong>Route:</strong> Gilgit → Islamabad</p>
-      <p><strong>Last Known Location:</strong> Near Dassu</p>
-      <p class="status">Estimated Location (Low Signal)</p>
-    </div>
+  <p><strong>Route:</strong> <span id="routeText">Gilgit → Islamabad</span></p>
+  <p><strong>Status:</strong> <span id="statusText">Waiting for trip data...</span></p>
+  <p><strong>Last Known Location:</strong> <span id="locationText">--</span></p>
+  <p><strong>Signal:</strong> <span id="signalText">--</span></p>
+  <div id="map" style="height: 300px; width: 100%; background: #eee; margin-top: 20px;"></div>
+</div>
   </section>
 
   <footer>
