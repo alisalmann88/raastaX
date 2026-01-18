@@ -8,49 +8,35 @@
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   
-  <!-- Font Awesome Icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <style>
-    :root {
-      --primary-dark: #0a1f44;
-      --primary-blue: #1f4fd8;
-      --primary-light: #2d5de3;
-      --white: #ffffff;
-      --light-bg: #f8fafc;
-      --gray-border: #e2e8f0;
-      --gray-text: #64748b;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
-    }
-
+    /* RESET & BASE */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
     }
 
     body {
-      background-color: var(--light-bg);
-      color: var(--primary-dark);
+      background: #f8fafc;
+      color: #0a1f44;
       line-height: 1.6;
     }
 
     /* HEADER */
     .main-header {
-      background: var(--white);
+      background: white;
       padding: 0 30px;
-      box-shadow: 0 4px 12px rgba(10, 31, 68, 0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       position: sticky;
       top: 0;
       z-index: 1000;
     }
 
-    .header-container {
+    .header-content {
       max-width: 1400px;
       margin: 0 auto;
       display: flex;
@@ -59,7 +45,7 @@
       height: 80px;
     }
 
-    .logo-container {
+    .logo-link {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -69,173 +55,126 @@
     .logo-box {
       width: 50px;
       height: 50px;
-      background: var(--white);
-      border: 2px solid var(--primary-dark);
-      border-radius: 12px;
+      background: white;
+      border: 2px solid #0a1f44;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 22px;
-      color: var(--primary-dark);
-      transition: all 0.3s ease;
-    }
-
-    .logo-container:hover .logo-box {
-      background: var(--primary-dark);
-      color: var(--white);
-      transform: translateY(-2px);
-    }
-
-    .logo-text {
-      display: flex;
-      flex-direction: column;
+      font-size: 24px;
+      color: #0a1f44;
     }
 
     .logo-text h1 {
       font-size: 28px;
       font-weight: 800;
-      color: var(--primary-dark);
-      line-height: 1;
+      color: #0a1f44;
     }
 
     .logo-text span {
       font-size: 12px;
-      color: var(--gray-text);
-      font-weight: 500;
-      letter-spacing: 0.5px;
+      color: #64748b;
+      display: block;
     }
 
     .nav-links {
       display: flex;
       gap: 30px;
-      align-items: center;
     }
 
     .nav-link {
-      color: var(--primary-dark);
+      color: #0a1f44;
       text-decoration: none;
       font-weight: 600;
       font-size: 16px;
       padding: 8px 0;
       position: relative;
-      transition: color 0.3s;
-    }
-
-    .nav-link:hover {
-      color: var(--primary-blue);
     }
 
     .nav-link.active {
-      color: var(--primary-blue);
+      color: #1f4fd8;
     }
 
     .nav-link.active::after {
       content: '';
       position: absolute;
-      bottom: -2px;
+      bottom: 0;
       left: 0;
       right: 0;
       height: 3px;
-      background: var(--primary-blue);
+      background: #1f4fd8;
       border-radius: 2px;
     }
 
-    .header-actions {
+    .book-btn {
+      background: #0a1f44;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .book-btn:hover {
+      background: #1f4fd8;
+      transform: translateY(-2px);
+    }
+
+    /* TRACKING CARD */
+    .tracking-card-container {
+      padding: 40px 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .tracking-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      font-size: 32px;
       display: flex;
       align-items: center;
       gap: 15px;
     }
 
-    .btn-header {
-      padding: 10px 24px;
-      background: var(--primary-dark);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-header:hover {
-      background: var(--primary-blue);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(31, 79, 216, 0.3);
-    }
-
-    /* TRACKING ISLAND */
-    .tracking-island {
-      position: relative;
-      z-index: 100;
-      max-width: 1200px;
-      margin: -40px auto 0;
-      padding: 0 30px;
-    }
-
-    .tracking-card {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 30px 40px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--gray-border);
-    }
-
-    .tracking-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-
-    .tracking-header h2 {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--primary-dark);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .tracking-header h2 i {
-      color: var(--primary-blue);
-    }
-
     .track-badge {
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-light));
+      background: linear-gradient(135deg, #1f4fd8, #3b82f6);
       color: white;
-      padding: 8px 20px;
+      padding: 10px 25px;
       border-radius: 50px;
       font-weight: 600;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .track-form {
       display: flex;
-      gap: 15px;
-      align-items: flex-end;
+      gap: 20px;
       flex-wrap: wrap;
     }
 
-    .form-group {
+    .input-group {
       flex: 1;
       min-width: 300px;
     }
 
-    .form-group label {
+    .input-group label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-weight: 600;
-      color: var(--primary-dark);
-      font-size: 15px;
     }
 
     .input-with-icon {
@@ -244,87 +183,75 @@
 
     .input-with-icon i {
       position: absolute;
-      left: 18px;
+      left: 20px;
       top: 50%;
       transform: translateY(-50%);
-      color: var(--gray-text);
-      font-size: 18px;
+      color: #64748b;
     }
 
     .form-input {
       width: 100%;
       padding: 16px 20px 16px 50px;
-      border: 2px solid var(--gray-border);
+      border: 2px solid #e2e8f0;
       border-radius: 12px;
       font-size: 16px;
-      font-weight: 500;
-      color: var(--primary-dark);
-      background: var(--white);
-      transition: all 0.3s ease;
+      transition: all 0.3s;
     }
 
     .form-input:focus {
       outline: none;
-      border-color: var(--primary-blue);
+      border-color: #1f4fd8;
       box-shadow: 0 0 0 3px rgba(31, 79, 216, 0.1);
     }
 
-    .form-input::placeholder {
-      color: #94a3b8;
-    }
-
-    .btn-track {
-      padding: 16px 40px;
-      background: var(--primary-dark);
+    .track-btn {
+      background: #0a1f44;
       color: white;
       border: none;
+      padding: 16px 40px;
       border-radius: 12px;
+      font-size: 18px;
       font-weight: 700;
-      font-size: 17px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
       display: flex;
       align-items: center;
       gap: 10px;
-      min-width: 160px;
-      justify-content: center;
+      min-width: 180px;
     }
 
-    .btn-track:hover {
-      background: var(--primary-blue);
+    .track-btn:hover {
+      background: #1f4fd8;
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(31, 79, 216, 0.25);
+      box-shadow: 0 10px 25px rgba(31, 79, 216, 0.3);
     }
 
     /* MAP SECTION */
-    .map-section {
+    .map-container {
       max-width: 1400px;
-      margin: 40px auto 0;
+      margin: 0 auto 40px;
       padding: 0 30px;
     }
 
-    .map-container {
-      background: var(--white);
+    .map-wrapper {
+      background: white;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--gray-border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 1px solid #e2e8f0;
     }
 
     .map-header {
-      padding: 25px 30px;
-      background: linear-gradient(135deg, var(--primary-dark), #152642);
+      padding: 20px 30px;
+      background: #0a1f44;
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
     }
 
     .map-header h3 {
       font-size: 22px;
-      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -332,9 +259,7 @@
 
     .signal-status {
       display: flex;
-      align-items: center;
       gap: 20px;
-      flex-wrap: wrap;
     }
 
     .status-item {
@@ -349,198 +274,83 @@
       border-radius: 50%;
     }
 
-    .dot-live { background: var(--success); }
-    .dot-estimated { background: var(--warning); }
-    .dot-offline { background: var(--danger); }
+    .dot-live { background: #10b981; }
+    .dot-estimated { background: #f59e0b; }
+    .dot-offline { background: #ef4444; }
 
     #map {
       height: 500px;
       width: 100%;
     }
 
-    /* STATUS DASHBOARD */
-    .status-dashboard {
+    /* STATUS CARDS */
+    .status-cards {
       max-width: 1400px;
-      margin: 30px auto;
+      margin: 40px auto;
       padding: 0 30px;
-    }
-
-    .status-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
     }
 
     .status-card {
-      background: var(--white);
+      background: white;
       border-radius: 16px;
       padding: 25px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--gray-border);
-      transition: transform 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
     }
 
-    .status-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .card-header {
+    .card-title {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 12px;
       margin-bottom: 20px;
     }
 
-    .card-header h4 {
+    .card-title h4 {
       font-size: 18px;
-      font-weight: 700;
-      color: var(--primary-dark);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      color: #0a1f44;
     }
 
     .card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      background: #1f4fd8;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
       color: white;
     }
-
-    .icon-vehicle { background: linear-gradient(135deg, var(--primary-blue), var(--primary-light)); }
-    .icon-location { background: linear-gradient(135deg, #10b981, #34d399); }
-    .icon-checkpoint { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-    .icon-eta { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
 
     .card-value {
       font-size: 32px;
       font-weight: 800;
-      color: var(--primary-dark);
+      color: #0a1f44;
       margin-bottom: 8px;
-      line-height: 1;
     }
 
     .card-desc {
+      color: #64748b;
       font-size: 14px;
-      color: var(--gray-text);
-      line-height: 1.5;
-    }
-
-    .card-status {
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 15px;
-    }
-
-    .status-live { background: #d1fae5; color: #065f46; }
-    .status-estimated { background: #fef3c7; color: #92400e; }
-    .status-offline { background: #fee2e2; color: #991b1b; }
-
-    /* FEATURES SECTION */
-    .features-section {
-      background: linear-gradient(135deg, var(--primary-dark), #152642);
-      color: white;
-      padding: 80px 30px;
-      margin-top: 60px;
-    }
-
-    .features-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .section-title h2 {
-      font-size: 36px;
-      font-weight: 800;
-      margin-bottom: 15px;
-    }
-
-    .section-title p {
-      font-size: 18px;
-      opacity: 0.9;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-    }
-
-    .feature-item {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 35px 30px;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .feature-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-8px);
-    }
-
-    .feature-icon {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--primary-light));
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 25px;
-      font-size: 28px;
-    }
-
-    .feature-item h3 {
-      font-size: 22px;
-      margin-bottom: 15px;
-      font-weight: 700;
-    }
-
-    .feature-item p {
-      opacity: 0.8;
-      line-height: 1.7;
     }
 
     /* CONTROLS */
-    .controls-section {
+    .demo-controls {
       max-width: 1200px;
       margin: 60px auto;
       padding: 0 30px;
-    }
-
-    .controls-title {
       text-align: center;
-      margin-bottom: 30px;
     }
 
-    .controls-title h3 {
+    .demo-controls h3 {
       font-size: 28px;
-      color: var(--primary-dark);
-      margin-bottom: 10px;
+      margin-bottom: 30px;
+      color: #0a1f44;
     }
 
-    .controls-title p {
-      color: var(--gray-text);
-    }
-
-    .controls-grid {
+    .control-buttons {
       display: flex;
       justify-content: center;
       gap: 15px;
@@ -548,37 +358,35 @@
     }
 
     .control-btn {
-      padding: 16px 28px;
-      background: var(--white);
-      color: var(--primary-dark);
-      border: 2px solid var(--gray-border);
-      border-radius: 12px;
+      padding: 14px 28px;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
       font-weight: 600;
-      font-size: 15px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
       display: flex;
       align-items: center;
       gap: 10px;
-      min-width: 180px;
+      min-width: 200px;
       justify-content: center;
     }
 
     .control-btn:hover {
-      background: var(--primary-dark);
+      background: #0a1f44;
       color: white;
-      border-color: var(--primary-dark);
-      transform: translateY(-3px);
+      border-color: #0a1f44;
     }
 
     /* FOOTER */
-    .main-footer {
-      background: var(--primary-dark);
+    footer {
+      background: #0a1f44;
       color: white;
       padding: 60px 30px 30px;
+      margin-top: 60px;
     }
 
-    .footer-container {
+    .footer-content {
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
@@ -587,17 +395,10 @@
       margin-bottom: 40px;
     }
 
-    .footer-col h4 {
-      font-size: 20px;
-      margin-bottom: 25px;
+    .footer-section h4 {
       color: #6fa3ff;
-      font-weight: 700;
-    }
-
-    .footer-col p {
-      opacity: 0.8;
-      line-height: 1.7;
       margin-bottom: 20px;
+      font-size: 20px;
     }
 
     .footer-links {
@@ -609,144 +410,100 @@
     }
 
     .footer-links a {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255,255,255,0.8);
       text-decoration: none;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      transition: color 0.3s;
     }
 
     .footer-links a:hover {
       color: white;
-      transform: translateX(5px);
     }
 
-    .footer-bottom {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding-top: 30px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    .copyright {
       text-align: center;
-      opacity: 0.7;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
       font-size: 14px;
     }
 
     /* RESPONSIVE */
-    @media (max-width: 1024px) {
-      .track-form {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      
-      .form-group {
-        min-width: 100%;
-      }
-      
-      .btn-track {
-        width: 100%;
-      }
-    }
-
     @media (max-width: 768px) {
-      .header-container {
+      .header-content {
+        flex-direction: column;
         height: auto;
         padding: 20px 0;
-        flex-direction: column;
         gap: 20px;
       }
-      
+
       .nav-links {
         flex-wrap: wrap;
         justify-content: center;
       }
-      
-      .tracking-island {
-        margin-top: 0;
-        padding: 20px;
-      }
-      
-      .tracking-card {
-        padding: 25px;
-      }
-      
-      .tracking-header {
+
+      .track-form {
         flex-direction: column;
-        gap: 15px;
-        text-align: center;
       }
-      
+
+      .input-group {
+        min-width: 100%;
+      }
+
+      .track-btn {
+        width: 100%;
+      }
+
       .map-header {
         flex-direction: column;
         gap: 15px;
         text-align: center;
       }
-      
+
       .signal-status {
         justify-content: center;
       }
-      
-      #map {
-        height: 400px;
-      }
-      
-      .section-title h2 {
-        font-size: 28px;
-      }
-    }
 
-    @media (max-width: 480px) {
-      .main-header {
-        padding: 0 20px;
-      }
-      
-      .tracking-island,
-      .map-section,
-      .status-dashboard,
-      .controls-section {
-        padding: 0 20px;
-      }
-      
-      .status-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .controls-grid {
+      .control-buttons {
         flex-direction: column;
       }
-      
+
       .control-btn {
         width: 100%;
       }
     }
 
-    /* LOADING STATE */
-    .loading {
-      display: none;
-      text-align: center;
-      padding: 40px;
+    /* NOTIFICATION */
+    .notification {
+      position: fixed;
+      top: 100px;
+      right: 30px;
+      background: #1f4fd8;
+      color: white;
+      padding: 18px 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 400px;
+      animation: slideIn 0.3s ease;
     }
 
-    .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid var(--primary-blue);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
-    }
+    .notification.success { background: #10b981; }
+    .notification.warning { background: #f59e0b; }
+    .notification.info { background: #1f4fd8; }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
 
     /* PULSE ANIMATION */
     @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
-      100% { transform: scale(1); opacity: 1; }
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
 
     .pulse {
@@ -758,8 +515,8 @@
 <body>
   <!-- HEADER -->
   <header class="main-header">
-    <div class="header-container">
-      <a href="/" class="logo-container">
+    <div class="header-content">
+      <a href="index.html" class="logo-link">
         <div class="logo-box">RX</div>
         <div class="logo-text">
           <h1>RaastaX</h1>
@@ -768,25 +525,23 @@
       </a>
 
       <div class="nav-links">
-        <a href="/" class="nav-link">Home</a>
-        <a href="/booking.html" class="nav-link">Book Trip</a>
-        <a href="/my-trips.html" class="nav-link">My Trips</a>
-        <a href="/raastacare.html" class="nav-link active">RaastaCare</a>
-        <a href="/driver.html" class="nav-link">Driver Portal</a>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="booking.html" class="nav-link">Book Trip</a>
+        <a href="my-trips.html" class="nav-link">My Trips</a>
+        <a href="raastacare.html" class="nav-link active">RaastaCare</a>
+        <a href="driver.html" class="nav-link">Driver Portal</a>
       </div>
 
-      <div class="header-actions">
-        <a href="/booking.html" class="btn-header">
-          <i class="fas fa-bus"></i> Book Now
-        </a>
-      </div>
+      <a href="booking.html" class="book-btn">
+        <i class="fas fa-bus"></i> Book Now
+      </a>
     </div>
   </header>
 
-  <!-- TRACKING ISLAND -->
-  <div class="tracking-island">
+  <!-- TRACKING CARD -->
+  <div class="tracking-card-container">
     <div class="tracking-card">
-      <div class="tracking-header">
+      <div class="card-header">
         <h2><i class="fas fa-satellite"></i> Track Your Trip</h2>
         <div class="track-badge">
           <i class="fas fa-shield-alt"></i> Live Family Tracking
@@ -794,8 +549,8 @@
       </div>
       
       <div class="track-form">
-        <div class="form-group">
-          <label for="bookingId"><i class="fas fa-ticket-alt"></i> Booking ID or Vehicle Number</label>
+        <div class="input-group">
+          <label><i class="fas fa-ticket-alt"></i> Booking ID or Vehicle Number</label>
           <div class="input-with-icon">
             <i class="fas fa-search"></i>
             <input type="text" id="bookingId" class="form-input" 
@@ -803,8 +558,8 @@
           </div>
         </div>
         
-        <div class="form-group">
-          <label for="pinCode"><i class="fas fa-lock"></i> Security PIN (Optional)</label>
+        <div class="input-group">
+          <label><i class="fas fa-lock"></i> Security PIN (Optional)</label>
           <div class="input-with-icon">
             <i class="fas fa-key"></i>
             <input type="text" id="pinCode" class="form-input" 
@@ -812,17 +567,16 @@
           </div>
         </div>
         
-        <button class="btn-track" onclick="lookupTrip()">
+        <button class="track-btn" onclick="lookupTrip()">
           <i class="fas fa-map-marked-alt"></i> Track Now
-          <span class="loading-spinner" id="trackSpinner" style="display: none;"></span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- MAP SECTION -->
-  <section class="map-section">
-    <div class="map-container">
+  <!-- MAP -->
+  <div class="map-container">
+    <div class="map-wrapper">
       <div class="map-header">
         <h3><i class="fas fa-route"></i> Live Journey Map</h3>
         <div class="signal-status">
@@ -840,113 +594,61 @@
           </div>
         </div>
       </div>
-      
       <div id="map"></div>
     </div>
-  </section>
+  </div>
 
-  <!-- STATUS DASHBOARD -->
-  <section class="status-dashboard">
-    <div class="status-grid">
-      <div class="status-card">
-        <div class="card-header">
-          <h4><i class="fas fa-bus"></i> Vehicle Status</h4>
-          <div class="card-icon icon-vehicle">
-            <i class="fas fa-bus"></i>
-          </div>
+  <!-- STATUS CARDS -->
+  <div class="status-cards">
+    <div class="status-card">
+      <div class="card-title">
+        <div class="card-icon">
+          <i class="fas fa-bus"></i>
         </div>
-        <div class="card-value" id="vehicleStatus">--</div>
-        <div class="card-desc" id="vehicleDetail">Enter tracking details above</div>
-        <div class="card-status status-offline" id="vehicleStatusBadge">OFFLINE</div>
+        <h4>Vehicle Status</h4>
       </div>
-      
-      <div class="status-card">
-        <div class="card-header">
-          <h4><i class="fas fa-map-marker-alt"></i> Current Location</h4>
-          <div class="card-icon icon-location">
-            <i class="fas fa-location-dot"></i>
-          </div>
-        </div>
-        <div class="card-value" id="locationText">--</div>
-        <div class="card-desc" id="locationDetail">Last known position</div>
-      </div>
-      
-      <div class="status-card">
-        <div class="card-header">
-          <h4><i class="fas fa-flag-checkered"></i> Next Checkpoint</h4>
-          <div class="card-icon icon-checkpoint">
-            <i class="fas fa-flag"></i>
-          </div>
-        </div>
-        <div class="card-value" id="checkpointText">--</div>
-        <div class="card-desc" id="checkpointDetail">Estimated arrival</div>
-      </div>
-      
-      <div class="status-card">
-        <div class="card-header">
-          <h4><i class="fas fa-clock"></i> Estimated Arrival</h4>
-          <div class="card-icon icon-eta">
-            <i class="fas fa-clock"></i>
-          </div>
-        </div>
-        <div class="card-value" id="etaText">--</div>
-        <div class="card-desc" id="etaDetail">Based on current progress</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FEATURES -->
-  <section class="features-section">
-    <div class="features-container">
-      <div class="section-title">
-        <h2>Why RaastaCare Beats GilgitGo</h2>
-        <p>Advanced tracking technology built for Pakistan's challenging mountain routes</p>
-      </div>
-      
-      <div class="features-grid">
-        <div class="feature-item">
-          <div class="feature-icon">
-            <i class="fas fa-satellite-dish"></i>
-          </div>
-          <h3>Signal-Loss Intelligence</h3>
-          <p>Smart estimation when network drops in Babusar, Chilas, and other dead zones.</p>
-        </div>
-        
-        <div class="feature-item">
-          <div class="feature-icon">
-            <i class="fas fa-bell"></i>
-          </div>
-          <h3>Auto Break Detection</h3>
-          <p>Automatically detects stops at Dassu (lunch), Chilas (rest), and updates family.</p>
-        </div>
-        
-        <div class="feature-item">
-          <div class="feature-icon">
-            <i class="fas fa-shield-alt"></i>
-          </div>
-          <h3>Family Safety Alerts</h3>
-          <p>SMS/WhatsApp alerts for signal loss, breaks, delays, and safe arrival.</p>
-        </div>
-        
-        <div class="feature-item">
-          <div class="feature-icon">
-            <i class="fas fa-mobile-alt"></i>
-          </div>
-          <h3>No App Required</h3>
-          <p>Share secure link via SMS/WhatsApp. Family can track on any device.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTROLS -->
-  <section class="controls-section">
-    <div class="controls-title">
-      <h3>Demo Controls</h3>
-      <p>Test RaastaCare features with simulation</p>
+      <div class="card-value" id="vehicleStatus">--</div>
+      <div class="card-desc" id="vehicleDetail">Enter tracking details</div>
     </div>
     
-    <div class="controls-grid">
+    <div class="status-card">
+      <div class="card-title">
+        <div class="card-icon">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h4>Current Location</h4>
+      </div>
+      <div class="card-value" id="locationText">--</div>
+      <div class="card-desc" id="locationDetail">Last known position</div>
+    </div>
+    
+    <div class="status-card">
+      <div class="card-title">
+        <div class="card-icon">
+          <i class="fas fa-flag-checkered"></i>
+        </div>
+        <h4>Next Checkpoint</h4>
+      </div>
+      <div class="card-value" id="checkpointText">--</div>
+      <div class="card-desc" id="checkpointDetail">Estimated arrival</div>
+    </div>
+    
+    <div class="status-card">
+      <div class="card-title">
+        <div class="card-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h4>Estimated Arrival</h4>
+      </div>
+      <div class="card-value" id="etaText">--</div>
+      <div class="card-desc" id="etaDetail">Based on progress</div>
+    </div>
+  </div>
+
+  <!-- DEMO CONTROLS -->
+  <div class="demo-controls">
+    <h3>Demo Controls</h3>
+    <div class="control-buttons">
       <button class="control-btn" onclick="startDemoTrip()">
         <i class="fas fa-play-circle"></i> Start Demo Trip
       </button>
@@ -960,382 +662,240 @@
         <i class="fas fa-redo"></i> Reset Demo
       </button>
     </div>
-  </section>
+  </div>
 
   <!-- FOOTER -->
-  <footer class="main-footer">
-    <div class="footer-container">
-      <div class="footer-col">
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
         <h4>RaastaCare</h4>
-        <p>Advanced family tracking system for Gilgit ⇄ Islamabad routes. Never lose sight of your loved ones, even in the mountains.</p>
+        <p>Advanced tracking for Gilgit routes. Never lose sight of loved ones.</p>
       </div>
       
-      <div class="footer-col">
+      <div class="footer-section">
         <h4>Quick Links</h4>
         <ul class="footer-links">
-          <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
-          <li><a href="/booking.html"><i class="fas fa-bus"></i> Book a Trip</a></li>
-          <li><a href="/my-trips.html"><i class="fas fa-history"></i> My Trips</a></li>
-          <li><a href="/driver.html"><i class="fas fa-id-card"></i> Driver Portal</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="booking.html">Book Trip</a></li>
+          <li><a href="my-trips.html">My Trips</a></li>
+          <li><a href="driver.html">Driver Portal</a></li>
         </ul>
       </div>
       
-      <div class="footer-col">
-        <h4>Contact Support</h4>
+      <div class="footer-section">
+        <h4>Contact</h4>
         <ul class="footer-links">
-          <li><a href="tel:+923001234567"><i class="fas fa-phone"></i> +92 300 1234567</a></li>
-          <li><a href="mailto:care@raastax.com"><i class="fas fa-envelope"></i> care@raastax.com</a></li>
-          <li><a href="#"><i class="fas fa-map-marker-alt"></i> Gilgit, Pakistan</a></li>
-          <li><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp Support</a></li>
+          <li><a href="tel:+923001234567">+92 300 1234567</a></li>
+          <li><a href="mailto:care@raastax.com">care@raastax.com</a></li>
+          <li><a href="#">Gilgit, Pakistan</a></li>
         </ul>
       </div>
     </div>
     
-    <div class="footer-bottom">
-      © 2024 RaastaX – RaastaCare for Safety & Trust. Made with <i class="fas fa-heart" style="color: #ff4757;"></i> for Gilgit travelers.
+    <div class="copyright">
+      © 2024 RaastaX – RaastaCare for Safety & Trust
     </div>
   </footer>
 
   <!-- SCRIPTS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
   
-  <!-- RaastaCare JS -->
   <script>
-    // raastacare.js - Professional Version
-    
-    // ========== GLOBAL VARIABLES ==========
+    // ========== VARIABLES ==========
     let map;
     let vehicleMarker;
-    let routeLine;
-    let checkpointMarkers = [];
     let simulationInterval;
     let currentTrip = null;
     let isDemoActive = false;
-    
-    // Route coordinates (Gilgit → Islamabad via KKH+Babusar)
+
     const routeCheckpoints = [
-      { name: "Gilgit", lat: 35.9208, lng: 74.3144, hasSignal: true, stopType: "start" },
-      { name: "Jaglot", lat: 35.7680, lng: 74.2776, hasSignal: false, stopType: "checkpoint" },
-      { name: "Chilas", lat: 35.4182, lng: 74.0981, hasSignal: true, stopType: "rest" },
-      { name: "Dassu (Lunch Stop)", lat: 35.2600, lng: 73.9800, hasSignal: true, stopType: "lunch" },
-      { name: "Babusar Base", lat: 35.0000, lng: 73.8000, hasSignal: false, stopType: "checkpoint" },
-      { name: "Babusar Top", lat: 34.8500, lng: 73.6500, hasSignal: false, stopType: "checkpoint" },
-      { name: "Naran", lat: 34.9064, lng: 73.6480, hasSignal: true, stopType: "rest" },
-      { name: "Islamabad", lat: 33.6844, lng: 73.0479, hasSignal: true, stopType: "destination" }
+      { name: "Gilgit", lat: 35.9208, lng: 74.3144, hasSignal: true },
+      { name: "Jaglot", lat: 35.7680, lng: 74.2776, hasSignal: false },
+      { name: "Chilas", lat: 35.4182, lng: 74.0981, hasSignal: true },
+      { name: "Dassu (Lunch)", lat: 35.2600, lng: 73.9800, hasSignal: true },
+      { name: "Babusar Base", lat: 35.0000, lng: 73.8000, hasSignal: false },
+      { name: "Babusar Top", lat: 34.8500, lng: 73.6500, hasSignal: false },
+      { name: "Naran", lat: 34.9064, lng: 73.6480, hasSignal: true },
+      { name: "Islamabad", lat: 33.6844, lng: 73.0479, hasSignal: true }
     ];
-    
-    // ========== MAP INITIALIZATION ==========
+
+    // ========== MAP INIT ==========
     function initMap() {
-      map = L.map('map').setView([35.9208, 74.3144], 9);
-      
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap',
-        maxZoom: 18
-      }).addTo(map);
-      
-      const routeCoords = routeCheckpoints.map(cp => [cp.lat, cp.lng]);
-      routeLine = L.polyline(routeCoords, {
-        color: '#1f4fd8',
-        weight: 4,
-        opacity: 0.8
-      }).addTo(map);
-      
-      routeCheckpoints.forEach((checkpoint, index) => {
-        let iconColor = '#6c757d';
-        if (checkpoint.stopType === 'start') iconColor = '#10b981';
-        if (checkpoint.stopType === 'destination') iconColor = '#ef4444';
-        if (checkpoint.stopType === 'lunch') iconColor = '#f59e0b';
+      try {
+        map = L.map('map').setView([35.9208, 74.3144], 9);
         
-        const icon = L.divIcon({
-          html: `<div style="background: ${iconColor}; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">${index+1}</div>`,
-          className: 'checkpoint-marker',
-          iconSize: [28, 28],
-          iconAnchor: [14, 14]
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap'
+        }).addTo(map);
+        
+        // Draw route
+        const routeCoords = routeCheckpoints.map(cp => [cp.lat, cp.lng]);
+        L.polyline(routeCoords, {
+          color: '#1f4fd8',
+          weight: 4,
+          opacity: 0.7
+        }).addTo(map);
+        
+        // Add markers
+        routeCheckpoints.forEach((checkpoint, index) => {
+          L.marker([checkpoint.lat, checkpoint.lng])
+            .addTo(map)
+            .bindPopup(`<b>${checkpoint.name}</b><br>Checkpoint ${index + 1}`);
         });
         
-        const marker = L.marker([checkpoint.lat, checkpoint.lng], { icon })
-          .addTo(map)
-          .bindPopup(`
-            <b>${checkpoint.name}</b><br>
-            ${checkpoint.stopType === 'start' ? '🚗 Start' : 
-              checkpoint.stopType === 'destination' ? '🏁 Destination' :
-              checkpoint.stopType === 'lunch' ? '🍽️ Lunch Stop' : '📍 Checkpoint'}<br>
-            Signal: ${checkpoint.hasSignal ? '🟢 Good' : '🔴 Weak'}
-          `);
-        
-        checkpointMarkers.push(marker);
-      });
-      
-      map.fitBounds(routeLine.getBounds());
-      console.log("✅ Professional map loaded");
+        console.log("✅ Map loaded successfully");
+      } catch (error) {
+        console.error("Map error:", error);
+        document.getElementById('map').innerHTML = 
+          '<div style="padding: 40px; text-align: center; color: #666;">Map loading failed. Check console.</div>';
+      }
     }
-    
-    // ========== TRACKING FUNCTIONS ==========
+
+    // ========== TRACKING ==========
     function lookupTrip() {
       const bookingId = document.getElementById('bookingId').value.trim();
-      const pinCode = document.getElementById('pinCode').value.trim();
       
       if (!bookingId) {
-        showNotification('Please enter a Booking ID or Vehicle Number', 'warning');
+        showNotification('Please enter Booking ID or Vehicle Number', 'warning');
         return;
       }
       
-      const btn = document.querySelector('.btn-track');
-      const spinner = document.getElementById('trackSpinner');
-      const originalText = btn.innerHTML;
-      
       // Show loading
+      const btn = document.querySelector('.track-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
       btn.disabled = true;
-      spinner.style.display = 'block';
-      btn.innerHTML = 'Searching...';
       
       setTimeout(() => {
         startDemoTrip(bookingId);
-        
-        // Reset button
-        btn.disabled = false;
-        spinner.style.display = 'none';
         btn.innerHTML = originalText;
-      }, 1500);
+        btn.disabled = false;
+      }, 1000);
     }
-    
+
     function startDemoTrip(bookingId = 'RAX-2024-GIL-ISB') {
       if (isDemoActive) return;
       
       isDemoActive = true;
       currentTrip = {
-        id: bookingId || 'RAX-2024-GIL-ISB',
-        vehicle: bookingId.includes('GIL') ? bookingId : 'GIL-1234',
-        driver: 'Ali Khan',
+        id: bookingId,
+        vehicle: 'GIL-1234',
+        currentIndex: 0,
         startTime: new Date(),
-        currentSegment: 0,
-        position: { ...routeCheckpoints[0] },
-        isOnline: true,
-        passengers: 12
+        isOnline: true
       };
       
       // Update UI
-      updateStatusCard('vehicle', 'ON ROUTE', `Vehicle ${currentTrip.vehicle}`, 'live');
-      updateStatusCard('location', routeCheckpoints[0].name, 'Live GPS location');
-      updateStatusCard('checkpoint', routeCheckpoints[1].name, 'Next: Jaglot');
-      updateStatusCard('eta', '6h 45m', 'To Islamabad');
+      updateCard('vehicleStatus', 'ON ROUTE');
+      updateCard('vehicleDetail', `Vehicle ${currentTrip.vehicle}`);
+      updateCard('locationText', routeCheckpoints[0].name);
+      updateCard('locationDetail', 'Live GPS location');
+      updateCard('checkpointText', routeCheckpoints[1].name);
+      updateCard('checkpointDetail', 'Next: Jaglot');
+      updateCard('etaText', '6h 45m');
+      updateCard('etaDetail', 'To Islamabad');
       
-      updateVehicleOnMap(currentTrip.position.lat, currentTrip.position.lng, false);
+      // Show vehicle
+      updateVehicleOnMap(routeCheckpoints[0].lat, routeCheckpoints[0].lng, false);
       
-      simulationInterval = setInterval(simulateTripProgress, 3000);
+      // Start simulation
+      simulationInterval = setInterval(simulateProgress, 2000);
       
-      showNotification('🚗 Trip tracking started! Family has been notified via SMS.', 'success');
+      showNotification('Trip tracking started! Family notified.', 'success');
     }
-    
-    function simulateTripProgress() {
-      if (!currentTrip) return;
-      
-      const totalSegments = routeCheckpoints.length - 1;
-      if (currentTrip.currentSegment >= totalSegments) {
+
+    function simulateProgress() {
+      if (!currentTrip || currentTrip.currentIndex >= routeCheckpoints.length - 1) {
         endDemoTrip();
         return;
       }
       
-      const progress = Math.min(1, (Date.now() - currentTrip.startTime) / (60 * 1000) / 5);
+      const checkpoint = routeCheckpoints[currentTrip.currentIndex];
+      const nextCheckpoint = routeCheckpoints[currentTrip.currentIndex + 1];
       
-      if (progress >= 0.95) {
-        currentTrip.currentSegment++;
-        const checkpoint = routeCheckpoints[currentTrip.currentSegment];
-        currentTrip.position = { ...checkpoint };
-        currentTrip.isOnline = checkpoint.hasSignal;
-        
-        // Special events
-        if (checkpoint.stopType === 'lunch') {
-          showNotification(`🍽️ Lunch break at ${checkpoint.name}! 30-45 minute stop.`, 'info');
-          updateStatusCard('vehicle', 'LUNCH BREAK', `Stopped at ${checkpoint.name}`, 'estimated');
-          
-          setTimeout(() => {
-            if (currentTrip) {
-              showNotification('🚗 Resuming journey from Dassu', 'success');
-              updateStatusCard('vehicle', 'ON ROUTE', `Vehicle ${currentTrip.vehicle}`, 'live');
-            }
-          }, 8000);
-        }
-        
-        if (!checkpoint.hasSignal) {
-          showNotification(`⚠️ Signal lost near ${checkpoint.name}. Using estimation.`, 'warning');
-        }
-        
-        // Update UI
-        updateStatusCard('location', checkpoint.name, 
-          currentTrip.isOnline ? 'Live GPS' : 'Estimated (Low Signal)');
-        
-        updateStatusCard('checkpoint', 
-          currentTrip.currentSegment < totalSegments ? 
-          routeCheckpoints[currentTrip.currentSegment + 1].name : 'Destination',
-          'Next checkpoint');
-        
-        const remaining = totalSegments - currentTrip.currentSegment;
-        updateStatusCard('eta', `${remaining * 45}m`, 'Estimated arrival');
-      } else {
-        // Interpolate position
-        const from = routeCheckpoints[currentTrip.currentSegment];
-        const to = routeCheckpoints[currentTrip.currentSegment + 1];
-        const lat = from.lat + (to.lat - from.lat) * progress;
-        const lng = from.lng + (to.lng - from.lng) * progress;
-        
-        currentTrip.position.lat = lat;
-        currentTrip.position.lng = lng;
+      // Move toward next checkpoint
+      currentTrip.currentIndex++;
+      
+      // Update UI
+      updateCard('locationText', checkpoint.name);
+      updateCard('checkpointText', nextCheckpoint.name);
+      
+      // Signal status
+      currentTrip.isOnline = checkpoint.hasSignal;
+      
+      // Update map
+      updateVehicleOnMap(checkpoint.lat, checkpoint.lng, !checkpoint.hasSignal);
+      
+      // Special events
+      if (checkpoint.name.includes('Dassu')) {
+        showNotification('Lunch break at Dassu (30-45 mins)', 'info');
       }
       
-      updateVehicleOnMap(currentTrip.position.lat, currentTrip.position.lng, !currentTrip.isOnline);
+      if (!checkpoint.hasSignal) {
+        showNotification(`Signal lost near ${checkpoint.name}`, 'warning');
+      }
     }
-    
-    function updateVehicleOnMap(lat, lng, isEstimated = false) {
+
+    function updateVehicleOnMap(lat, lng, isEstimated) {
       const latLng = [lat, lng];
       
       if (!vehicleMarker) {
-        const vehicleIcon = L.divIcon({
-          html: `
-            <div style="background: ${isEstimated ? '#f59e0b' : '#1f4fd8'}; 
-                        width: 45px; height: 45px; border-radius: 50%; 
-                        display: flex; align-items: center; justify-content: center;
-                        border: 4px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                        animation: ${isEstimated ? 'pulse 2s infinite' : 'none'};">
-              <i class="fas fa-bus" style="color: white; font-size: 20px;"></i>
-            </div>
-          `,
-          className: 'vehicle-marker',
-          iconSize: [45, 45],
-          iconAnchor: [22.5, 22.5]
-        });
-        
-        vehicleMarker = L.marker(latLng, { icon: vehicleIcon })
-          .addTo(map)
-          .bindPopup(`
-            <b>${isEstimated ? '🚨 Estimated' : '📍 Live'}</b><br>
-            Vehicle: ${currentTrip?.vehicle}<br>
-            Time: ${new Date().toLocaleTimeString()}
-          `)
-          .openPopup();
+        vehicleMarker = L.marker(latLng, {
+          icon: L.divIcon({
+            html: `<div style="background: ${isEstimated ? '#f59e0b' : '#1f4fd8'}; 
+                           width: 40px; height: 40px; border-radius: 50%; 
+                           display: flex; align-items: center; justify-content: center;
+                           border: 3px solid white; box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+                           animation: ${isEstimated ? 'pulse 2s infinite' : 'none'};">
+                    <i class="fas fa-bus" style="color: white;"></i>
+                  </div>`,
+            className: 'vehicle-marker',
+            iconSize: [40, 40]
+          })
+        }).addTo(map)
+        .bindPopup(`<b>${isEstimated ? 'Estimated' : 'Live'}</b><br>${new Date().toLocaleTimeString()}`);
       } else {
         vehicleMarker.setLatLng(latLng);
-        
-        const newIcon = L.divIcon({
-          html: `
-            <div style="background: ${isEstimated ? '#f59e0b' : '#1f4fd8'}; 
-                        width: 45px; height: 45px; border-radius: 50%; 
-                        display: flex; align-items: center; justify-content: center;
-                        border: 4px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                        animation: ${isEstimated ? 'pulse 2s infinite' : 'none'};">
-              <i class="fas fa-bus" style="color: white; font-size: 20px;"></i>
-            </div>
-          `,
-          className: 'vehicle-marker',
-          iconSize: [45, 45],
-          iconAnchor: [22.5, 22.5]
-        });
-        
-        vehicleMarker.setIcon(newIcon);
       }
       
-      map.panTo(latLng, { animate: true, duration: 1 });
+      map.panTo(latLng);
     }
-    
-    // ========== UI HELPER FUNCTIONS ==========
-    function updateStatusCard(cardId, value, description, status = null) {
-      document.getElementById(`${cardId}Text`).textContent = value;
-      document.getElementById(`${cardId}Detail`).textContent = description;
-      
-      if (status && cardId === 'vehicle') {
-        const badge = document.getElementById('vehicleStatusBadge');
-        badge.textContent = status.toUpperCase();
-        badge.className = 'card-status ' + 
-          (status === 'live' ? 'status-live' : 
-           status === 'estimated' ? 'status-estimated' : 'status-offline');
-      }
-    }
-    
-    function showNotification(message, type = 'info') {
-      const notification = document.createElement('div');
-      notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 30px;
-        background: ${type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : '#1f4fd8'};
-        color: white;
-        padding: 18px 25px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        min-width: 350px;
-        max-width: 400px;
-        animation: slideIn 0.3s ease;
-        font-weight: 500;
-      `;
-      
-      notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}" 
-           style="font-size: 22px;"></i>
-        <div style="flex: 1;">${message}</div>
-        <button onclick="this.parentElement.remove()" 
-                style="background: none; border: none; color: white; cursor: pointer; font-size: 18px;">
-          <i class="fas fa-times"></i>
-        </button>
-      `;
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        if (notification.parentElement) {
-          notification.remove();
-        }
-      }, 5000);
-    }
-    
+
+    // ========== DEMO CONTROLS ==========
     function simulateSignalLoss() {
       if (!currentTrip) {
-        showNotification('Start a demo trip first!', 'warning');
+        showNotification('Start demo trip first', 'warning');
         return;
       }
       
       currentTrip.isOnline = false;
-      showNotification('📶 Simulating signal loss. Switching to estimated tracking...', 'warning');
-      updateStatusCard('vehicle', 'ESTIMATED', 'Signal lost - Using estimation', 'estimated');
+      showNotification('Signal lost - Using estimation', 'warning');
     }
-    
+
     function simulateBreak() {
       if (!currentTrip) {
-        showNotification('Start a demo trip first!', 'warning');
+        showNotification('Start demo trip first', 'warning');
         return;
       }
       
-      showNotification('🍽️ Simulating lunch break at Dassu. Vehicle stopped for 30 minutes.', 'info');
-      updateStatusCard('vehicle', 'LUNCH BREAK', 'Stopped at Dassu for meal', 'estimated');
-      
+      showNotification('Lunch break at Dassu', 'info');
       setTimeout(() => {
-        if (currentTrip) {
-          showNotification('🚗 Lunch break over. Resuming journey.', 'success');
-          updateStatusCard('vehicle', 'ON ROUTE', `Vehicle ${currentTrip.vehicle}`, 'live');
-        }
-      }, 8000);
+        showNotification('Resuming journey', 'success');
+      }, 3000);
     }
-    
+
     function endDemoTrip() {
-      if (!isDemoActive) return;
-      
       clearInterval(simulationInterval);
       isDemoActive = false;
       
-      updateStatusCard('vehicle', 'TRIP COMPLETED', 'Arrived safely at Islamabad', 'live');
-      updateStatusCard('location', 'Islamabad', 'Destination reached');
-      updateStatusCard('checkpoint', '--', 'Journey complete');
-      updateStatusCard('eta', '0h 0m', 'Arrived');
+      updateCard('vehicleStatus', 'TRIP COMPLETED');
+      updateCard('locationText', 'Islamabad');
+      updateCard('checkpointText', '--');
+      updateCard('etaText', '0h 0m');
       
-      showNotification('🎉 Trip completed safely! Family has been notified.', 'success');
-      
-      setTimeout(resetTracking, 10000);
+      showNotification('Trip completed safely!', 'success');
     }
-    
+
     function resetTracking() {
       clearInterval(simulationInterval);
       isDemoActive = false;
@@ -1346,19 +906,49 @@
         vehicleMarker = null;
       }
       
-      updateStatusCard('vehicle', '--', 'Enter tracking details above', 'offline');
-      updateStatusCard('location', '--', 'Last known position');
-      updateStatusCard('checkpoint', '--', 'Estimated arrival');
-      updateStatusCard('eta', '--', 'Based on current progress');
+      updateCard('vehicleStatus', '--');
+      updateCard('vehicleDetail', 'Enter tracking details');
+      updateCard('locationText', '--');
+      updateCard('locationDetail', 'Last known position');
+      updateCard('checkpointText', '--');
+      updateCard('etaText', '--');
       
       document.getElementById('bookingId').value = '';
       document.getElementById('pinCode').value = '';
-      
-      showNotification('Tracking reset. Ready for new trip.', 'info');
     }
-    
-    // ========== INITIALIZATION ==========
-    window.onload = function() {
+
+    // ========== HELPER FUNCTIONS ==========
+    function updateCard(id, text) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = text;
+    }
+
+    function showNotification(message, type = 'info') {
+      // Remove existing notifications
+      document.querySelectorAll('.notification').forEach(n => n.remove());
+      
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" style="margin-left: auto; background: none; border: none; color: white; cursor: pointer;">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto remove
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+
+    // ========== INIT ==========
+    document.addEventListener('DOMContentLoaded', function() {
       initMap();
       
       // Enter key support
@@ -1366,23 +956,10 @@
         if (e.key === 'Enter') lookupTrip();
       });
       
-      // Add CSS animations
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes slideIn {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes pulse {
-          0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.1); opacity: 0.8; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-      `;
-      document.head.appendChild(style);
-    };
-    
-    // Export functions
+      console.log('RaastaCare ready');
+    });
+
+    // Make functions global
     window.lookupTrip = lookupTrip;
     window.startDemoTrip = startDemoTrip;
     window.simulateSignalLoss = simulateSignalLoss;
